@@ -6,7 +6,7 @@ public class MatrixCheck {
 
         boolean result = true;
 
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < board.length; j++) {
             if (board[i][j] != 'X') {
                 result = false;
                 break;
@@ -21,7 +21,7 @@ public class MatrixCheck {
 
         boolean result = true;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < board.length; i++) {
             if (board[i][j] != 'X') {
                 result = false;
                 break;
@@ -35,7 +35,7 @@ public class MatrixCheck {
     public static boolean isWin(char[][] board) {
 
         boolean result = false;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < board.length; i++) {
             if (board[i][i] == 'X') {
                 if ((monoHorizontal(board, i) || monoVertical(board, i))) {
                     result = true;
