@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SqAreaTest {
-
     @Test
     public void square1() {
         int inP = 4;
@@ -22,5 +21,4 @@ public class SqAreaTest {
         double out = SqArea.square(inP, inK);
         Assert.assertEquals(expected, out, 0.01);
     }
-
 }

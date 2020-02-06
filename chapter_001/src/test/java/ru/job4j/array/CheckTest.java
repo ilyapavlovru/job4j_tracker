@@ -5,7 +5,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class CheckTest {
-
     @Test
     public void whenDataMonoOddByTrueThenTrue() {  // нечетное кол-во эл-ов и однородный
         Check check = new Check();

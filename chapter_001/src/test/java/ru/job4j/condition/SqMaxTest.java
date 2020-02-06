@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class SqMaxTest {
-
     @Test
     public void whenFirstMax() {
 
@@ -19,7 +18,6 @@ public class SqMaxTest {
         int result = SqMax.max(first, second, third, forth);
         assertThat(result, is(expected));
     }
-
 
     @Test
     public void whenSecondMax() {
@@ -35,7 +33,6 @@ public class SqMaxTest {
         assertThat(result, is(expected));
     }
 
-
     @Test
     public void whenThirdMax() {
 
@@ -49,7 +46,6 @@ public class SqMaxTest {
         int result = SqMax.max(first, second, third, forth);
         assertThat(result, is(expected));
     }
-
 
     @Test
     public void whenForthMax() {
@@ -65,7 +61,6 @@ public class SqMaxTest {
         assertThat(result, is(expected));
     }
 
-
     @Test
     public void whenAllTheSame() {
 
@@ -79,6 +74,4 @@ public class SqMaxTest {
         int result = SqMax.max(first, second, third, forth);
         assertThat(result, is(expected));
     }
-
-
 }

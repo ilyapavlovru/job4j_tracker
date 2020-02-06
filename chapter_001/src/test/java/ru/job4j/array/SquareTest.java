@@ -5,7 +5,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class SquareTest {
-
     @Test
     public void whenBound3Then149() {
         int bound = 3;

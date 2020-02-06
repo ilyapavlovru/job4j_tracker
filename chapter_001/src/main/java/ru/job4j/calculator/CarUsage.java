@@ -19,19 +19,12 @@ public class CarUsage {
         audi.gasInfo();
 
         byte age = 100;
-
         char sex = 'm';
-
         short height = 180;
-
         int bricks = 100500;
-
         long bacteria = 1223372036854775L;
-
         double dist = 5456687.234;
-
         boolean workpermit = true;
-
         long filesize = 657987214;
     }
 }

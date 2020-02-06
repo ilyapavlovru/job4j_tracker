@@ -5,7 +5,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class MatrixCheckTest {
-
     @Test
     public void whenDataMonoByTrueThenTrue() {
         char[][] input = {
@@ -44,5 +43,4 @@ public class MatrixCheckTest {
         boolean result = MatrixCheck.isWin(input);
         assertThat(result, is(true));
     }
-
 }

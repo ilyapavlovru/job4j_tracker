@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ConverterTest {
-
     @Test
     public void rubleToEuro() {
         int in = 140;
@@ -36,5 +35,4 @@ public class ConverterTest {
         int out = Converter.dollarToRuble(in);
         Assert.assertEquals(expected, out);
     }
-
 }
