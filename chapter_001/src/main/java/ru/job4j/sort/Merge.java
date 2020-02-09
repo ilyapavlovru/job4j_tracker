@@ -5,24 +5,16 @@ import java.util.Arrays;
 public class Merge {
     public int[] merge(int[] left, int[] right) {
         int[] rsl = new int[left.length + right.length];
-        int i = 0; int j = 0; int k = 0;
-        while ((i < left.length) || (j < right.length)) {
-            if (i == left.length) {
-                rsl[k] = right[j];
-                k++;
-                j++;
-            } else if (j == right.length) {
-                rsl[k] = left[i];
-                k++;
-                i++;
-            } else if (left[i] < right[j]) {
-                rsl[k] = left[i];
-                k++;
-                i++;
+        int iLeft = 0; int iRight = 0; int iResult = 0;
+        while ((iLeft < left.length) || (iRight < right.length)) {
+            if (iLeft == left.length) {
+                rsl[iResult++] = right[iRight++];
+            } else if (iRight == right.length) {
+                rsl[iResult++] = left[iLeft++];
+            } else if (left[iLeft] < right[iRight]) {
+                rsl[iResult++] = left[iLeft++];
             } else {
-                rsl[k] = right[j];
-                k++;
-                j++;
+                rsl[iResult++] = right[iRight++];
             }
         }
         return rsl;
