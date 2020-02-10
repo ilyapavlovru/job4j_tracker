@@ -44,7 +44,7 @@ public class PointTest {
     }
 
     @Test
-    public void distance3d() {
+    public void distance3dFirst() {
         int inX1 = 1;
         int inY1 = 2;
         int inZ1 = 3;
@@ -54,6 +54,21 @@ public class PointTest {
         Point a = new Point(inX1, inY1, inZ1);
         Point b = new Point(inX2, inY2, inZ2);
         double expected = 9.0;
+        double out = a.distance(b);
+        Assert.assertEquals(expected, out, 0.1);
+    }
+
+    @Test
+    public void distance3dSecond() {
+        int inX1 = 0;
+        int inY1 = -3;
+        int inZ1 = 3;
+        int inX2 = 3;
+        int inY2 = 1;
+        int inZ2 = 3;
+        Point a = new Point(inX1, inY1, inZ1);
+        Point b = new Point(inX2, inY2, inZ2);
+        double expected = 5.0;
         double out = a.distance(b);
         Assert.assertEquals(expected, out, 0.1);
     }
