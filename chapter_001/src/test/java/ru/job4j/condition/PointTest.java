@@ -42,4 +42,19 @@ public class PointTest {
         double out = a.distance(b);
         Assert.assertEquals(expected, out, 0.01);
     }
+
+    @Test
+    public void distance3d() {
+        int inX1 = 1;
+        int inY1 = 2;
+        int inZ1 = 3;
+        int inX2 = -7;
+        int inY2 = -2;
+        int inZ2 = 4;
+        Point a = new Point(inX1, inY1, inZ1);
+        Point b = new Point(inX2, inY2, inZ2);
+        double expected = 9.0;
+        double out = a.distance(b);
+        Assert.assertEquals(expected, out, 0.1);
+    }
 }
