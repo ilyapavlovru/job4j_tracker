@@ -5,4 +5,10 @@ public class Max {
         boolean condition = left > right;
         return condition ? left : right;
     }
+    public static int max(int first, int second, int third) {
+        return max(
+                first,
+                max(second, third)
+        );
+    }
 }
