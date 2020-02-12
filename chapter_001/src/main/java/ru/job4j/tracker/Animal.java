@@ -18,5 +18,7 @@ public class Animal {
         Tiger tiger = new Tiger();
 
         Animal animal2 = new Animal("Animal");
+        Predator predator2 = new Predator("Predator");
+        Tiger tiger2 = new Tiger("Tiger");
     }
 }
