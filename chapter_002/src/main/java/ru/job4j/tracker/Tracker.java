@@ -37,7 +37,7 @@ public class Tracker {
 
     /**
      * Метод  возвращает копию массива this.items без null элементов (без пустых клеток)
-     * @return TODO
+     * @return копия массива this.items без null элементов (без пустых клеток)
      */
     public Item[] findAll() {
         Item[] itemsWithoutNull = new Item[this.items.length];
@@ -59,16 +59,18 @@ public class Tracker {
      * name (используя метод getName класса Item) с аргументом метода String key.
      * Элементы, у которых совпадает name, копирует в результирующий массив и возвращает его
      * @param key ключевое слово
-     * @return TODO
+     * @return массив Item с эл-ми у которых поле name совпадает с key
      */
     public Item[] findByName(String key) {
         Item[] itemsWithKeywords = new Item[this.items.length];
         int size = 0;
         for (int index = 0; index < this.items.length; index++) {
             Item item = this.items[index];
-            if (item.getName().equals(key)) {
-                itemsWithKeywords[size] = item;
-                size++;
+            if (item != null) {
+                if (item.getName().equals(key)) {
+                    itemsWithKeywords[size] = item;
+                    size++;
+                }
             }
         }
         itemsWithKeywords = Arrays.copyOf(itemsWithKeywords, size);
@@ -80,7 +82,7 @@ public class Tracker {
      * Метод проверяет в цикле все элементы массива this.items, сравнивая id с аргументом String id
      * и возвращает найденный Item. Если Item не найден - возвращает null.
      * @param id идентификатор для поиска
-     * @return TODO
+     * @return найденный Item
      */
     public Item findById(String id) {
         for (int index = 0; index < this.items.length; index++) {
