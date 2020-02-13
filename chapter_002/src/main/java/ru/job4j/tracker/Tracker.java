@@ -85,7 +85,7 @@ public class Tracker {
      * name (используя метод getName класса Item) с аргументом метода String key.
      * Элементы, у которых совпадает name, копирует в результирующий массив и возвращает его
      * @param key ключевое слово
-     * @return массив Item с эл-ми у которых поле name совпадает с key
+     * @return массив Item с эл-ми, у которых поле name совпадает с key
      */
     public Item[] findByName(String key) {
         Item[] itemsWithKeywords = new Item[this.items.length];
@@ -113,8 +113,10 @@ public class Tracker {
     public Item findById(String id) {
         for (int index = 0; index < this.items.length; index++) {
             Item item = this.items[index];
-            if (item.getId().equals(id)) {
-                return item;
+            if (item != null) {
+                if (item.getId().equals(id)) {
+                    return item;
+                }
             }
         }
         return null;
