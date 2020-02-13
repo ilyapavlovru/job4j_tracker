@@ -14,6 +14,11 @@ public class Tracker {
      */
     private int position = 0;
 
+    public int getPosition() {
+        return position;
+    }
+
+
     /**
      * Метод добавления заявки в хранилище
      * @param item новая заявка
@@ -22,6 +27,27 @@ public class Tracker {
         item.setId(this.generateId());
         items[this.position++] = item;
         return item;
+    }
+
+    /**
+     * Метод редактирования заявки в хранилище
+     * @param position позиция заявки в хранилище
+     * @param newName новое имя для заявки
+     */
+    public void edit(int position, String newName) {
+        this.items[position].setName(newName);
+    }
+
+    /**
+     * Метод удаления заявки из хранилища
+     * @param index позиция заявки в хранилище
+     */
+    public void delete(int index) {
+        for (int i = index; i < this.items.length - 1; i++) {
+            this.items[i] = this.items[i + 1];
+        }
+        this.items[this.items.length - 1] = null;
+        this.position--;
     }
 
     /**
