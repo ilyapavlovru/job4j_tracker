@@ -66,17 +66,7 @@ public class Tracker {
      * @return копия массива this.items без null элементов (без пустых клеток)
      */
     public Item[] findAll() {
-        Item[] itemsWithoutNull = new Item[this.items.length];
-        int size = 0;
-        for (int index = 0; index < this.items.length; index++) {
-            Item item = this.items[index];
-            if (item != null) {
-                itemsWithoutNull[size] = item;
-                size++;
-            }
-        }
-        itemsWithoutNull = Arrays.copyOf(itemsWithoutNull, size);
-        return itemsWithoutNull;
+        return Arrays.copyOf(this.items, position);
     }
 
 
@@ -88,15 +78,13 @@ public class Tracker {
      * @return массив Item с эл-ми, у которых поле name совпадает с key
      */
     public Item[] findByName(String key) {
-        Item[] itemsWithKeywords = new Item[this.items.length];
+        Item[] itemsWithKeywords = new Item[this.position];
         int size = 0;
-        for (int index = 0; index < this.items.length; index++) {
+        for (int index = 0; index < this.position; index++) {
             Item item = this.items[index];
-            if (item != null) {
-                if (item.getName().equals(key)) {
-                    itemsWithKeywords[size] = item;
-                    size++;
-                }
+            if (item.getName().equals(key)) {
+                itemsWithKeywords[size] = item;
+                size++;
             }
         }
         itemsWithKeywords = Arrays.copyOf(itemsWithKeywords, size);
@@ -111,12 +99,10 @@ public class Tracker {
      * @return найденный Item
      */
     public Item findById(String id) {
-        for (int index = 0; index < this.items.length; index++) {
+        for (int index = 0; index < this.position; index++) {
             Item item = this.items[index];
-            if (item != null) {
-                if (item.getId().equals(id)) {
-                    return item;
-                }
+            if (item.getId().equals(id)) {
+                return item;
             }
         }
         return null;
