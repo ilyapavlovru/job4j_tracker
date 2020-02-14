@@ -39,10 +39,14 @@ public class StartUI {
 
                 // Delete item
             } else if (select == 3) {
-                System.out.println("=== Delete item ====");
-                System.out.print("Select position: ");
-                int position = Integer.parseInt(scanner.nextLine());
-                tracker.delete(position); // удаление по позиции
+//                System.out.println("=== Delete item ====");
+//                System.out.print("Select position: ");
+//                int position = Integer.parseInt(scanner.nextLine());
+//                tracker.delete(position); // удаление по позиции
+
+                System.out.print("Enter id to delete item: ");
+                String id = scanner.nextLine();
+                tracker.delete(id);
 
                 // Find item by Id
             } else if (select == 4) {

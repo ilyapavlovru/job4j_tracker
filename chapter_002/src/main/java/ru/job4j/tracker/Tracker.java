@@ -18,7 +18,6 @@ public class Tracker {
         return position;
     }
 
-
     /**
      * Метод добавления заявки в хранилище
      * @param item новая заявка
@@ -29,26 +28,18 @@ public class Tracker {
         return item;
     }
 
-
     /**
-     * Метод редактирования заявки в хранилище
-     * @param position позиция заявки в хранилище
-     * @param newName новое имя для заявки
+     * Метод удаления заявки по id
+     * @param id позиция заявки в хранилище
      */
-    public void edit(int position, String newName) {
-        this.items[position].setName(newName);
-    }
-
-    /**
-     * Метод удаления заявки из хранилища
-     * @param index позиция заявки в хранилище
-     */
-    public void delete(int index) {
-        for (int i = index; i < this.items.length - 1; i++) {
-            this.items[i] = this.items[i + 1];
-        }
-        this.items[this.items.length - 1] = null;
-        this.position--;
+    public boolean delete(String id) {
+        int start = indexOf(id) + 1;
+        int distPos = indexOf(id);
+        int size = position - indexOf(id);
+        System.arraycopy(this.items, start, this.items, distPos , size );
+        this.items[position] = null;
+        position--;
+        return true;
     }
 
     /**
@@ -100,7 +91,15 @@ public class Tracker {
      * @return найденный Item
      */
     public Item findById(String id) {
-        return items[indexOf(id)];
+        Item item = null;
+        for (int index = 0; index < position; index++) {
+            Item current = items[index];
+            if (current.getId().equals(id)) {
+                item = current;
+                break;
+            }
+        }
+        return item;
     }
 
 
