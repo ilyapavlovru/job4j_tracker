@@ -30,12 +30,12 @@ public class StartUI {
                 // Edit item
             } else if (select == 2) {
                 System.out.println("=== Edit item ====");
-                System.out.print("Select position: ");
-                int position = Integer.parseInt(scanner.nextLine());
+                System.out.print("Enter id to replace item: ");
+                String id = scanner.nextLine();
                 System.out.print("Enter new name: ");
                 String newName = scanner.nextLine();
-                tracker.edit(position, newName); // замена по позиции
-                //tracker.edit(oldName, newName); // замена по имени
+                Item newItem = new Item(newName);
+                tracker.replace(id, newItem);
 
                 // Delete item
             } else if (select == 3) {

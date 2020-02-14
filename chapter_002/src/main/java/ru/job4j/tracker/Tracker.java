@@ -29,6 +29,7 @@ public class Tracker {
         return item;
     }
 
+
     /**
      * Метод редактирования заявки в хранилище
      * @param position позиция заявки в хранилище
@@ -99,12 +100,30 @@ public class Tracker {
      * @return найденный Item
      */
     public Item findById(String id) {
-        for (int index = 0; index < this.position; index++) {
-            Item item = this.items[index];
-            if (item.getId().equals(id)) {
-                return item;
+        return items[indexOf(id)];
+    }
+
+
+    private int indexOf(String id) {
+        int rsl = -1;
+        for (int index = 0; index < position; index++) {
+            if (items[index].getId().equals(id)) {
+                rsl = index;
+                break;
             }
         }
-        return null;
+        return rsl;
+    }
+
+    /**
+     * Метод замены заявки в хранилище (id заявки сохраняется)
+     * @param id заявки, которую нужно заменить
+     * @param item новая заявка
+     */
+    public boolean replace(String id, Item item) {
+        int index = indexOf(id);
+        item.setId(id);
+        this.items[index] = item;
+        return true;
     }
 }
