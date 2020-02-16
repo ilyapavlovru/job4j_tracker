@@ -33,13 +33,18 @@ public class Tracker {
      * @param id позиция заявки в хранилище
      */
     public boolean delete(String id) {
-        int start = indexOf(id) + 1;
-        int distPos = indexOf(id);
-        int size = position - indexOf(id);
-        System.arraycopy(this.items, start, this.items, distPos , size );
-        this.items[position] = null;
-        position--;
-        return true;
+        int index = indexOf(id);
+        if (index == -1) {
+            return false;
+        } else {
+            int start = index + 1;
+            int distPos = index;
+            int size = position - index;
+            System.arraycopy(this.items, start, this.items, distPos, size);
+            this.items[position] = null;
+            position--;
+            return true;
+        }
     }
 
     /**
@@ -121,8 +126,12 @@ public class Tracker {
      */
     public boolean replace(String id, Item item) {
         int index = indexOf(id);
-        item.setId(id);
-        this.items[index] = item;
-        return true;
+        if (index == -1) {
+            return false;
+        } else {
+            item.setId(id);
+            this.items[index] = item;
+            return true;
+        }
     }
 }

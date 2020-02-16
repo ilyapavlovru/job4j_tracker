@@ -35,18 +35,21 @@ public class StartUI {
                 System.out.print("Enter new name: ");
                 String newName = scanner.nextLine();
                 Item newItem = new Item(newName);
-                tracker.replace(id, newItem);
+                if (tracker.replace(id, newItem)) {
+                    System.out.println("Successfully replaced item");
+                } else {
+                    System.out.println("Not found id to replace item");
+                }
 
                 // Delete item
             } else if (select == 3) {
-//                System.out.println("=== Delete item ====");
-//                System.out.print("Select position: ");
-//                int position = Integer.parseInt(scanner.nextLine());
-//                tracker.delete(position); // удаление по позиции
-
                 System.out.print("Enter id to delete item: ");
                 String id = scanner.nextLine();
-                tracker.delete(id);
+                if (tracker.delete(id)) {
+                    System.out.println("Successfully deleted item");
+                } else {
+                    System.out.println("Not found id to delete item");
+                }
 
                 // Find item by Id
             } else if (select == 4) {
@@ -54,7 +57,11 @@ public class StartUI {
                 System.out.print("Enter id to find items: ");
                 String id = scanner.nextLine();
                 Item item = tracker.findById(id);
-                System.out.println("id: " + item.getId() + "; name: " + item.getName());
+                if (item != null) {
+                    System.out.println("id: " + item.getId() + "; name: " + item.getName());
+                } else {
+                    System.out.println("Not found");
+                }
 
                 // Find items by name
             } else if (select == 5) {
@@ -62,8 +69,7 @@ public class StartUI {
                 System.out.print("Enter name to find items: ");
                 String name = scanner.nextLine();
                 Item[] items = tracker.findByName(name);
-                for (int index = 0; index < items.length; index++) {
-                    Item item = items[index];
+                for (Item item : items) {
                     System.out.println("id: " + item.getId() + "; name: " + item.getName());
                 }
 
