@@ -13,10 +13,10 @@ public class SquareTest {
                 square.draw(),
                 is(
                         new StringJoiner(System.lineSeparator())
-                                .add("+++++++")
+                                .add("++++")
                                 .add("+     +")
                                 .add("+     +")
-                                .add("+++++++")
+                                .add("++++")
                                 .toString()
                 )
         );
