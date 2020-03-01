@@ -1,4 +1,4 @@
-package ru.job4j.interview;
+package ru.job4j.interview.constructor;
 
 public class Item {
 

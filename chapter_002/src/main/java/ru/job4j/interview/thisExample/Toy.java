@@ -1,4 +1,4 @@
-package ru.job4j.interview;
+package ru.job4j.interview.thisExample;
 
 public class Toy {
     String name;

@@ -1,4 +1,4 @@
-package ru.job4j.interview;
+package ru.job4j.interview.thisExample;
 
 public class ToyDemo {
     public static void main(String[] args) {
