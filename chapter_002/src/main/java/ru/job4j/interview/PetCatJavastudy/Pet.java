@@ -2,6 +2,9 @@ package ru.job4j.interview.PetCatJavastudy;
 
 public class Pet {
     private String name;
+    {
+        name = "NoName";
+    }
     static {
         System.out.println("Static block in Pet");
     }

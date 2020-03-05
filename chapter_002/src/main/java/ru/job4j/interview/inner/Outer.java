@@ -15,7 +15,7 @@ class Outer {
 
     // это внутренний класс
     class Inner {
-        int y = 10;  // локальная переменная класса Inner
+        private int y = 10;  // локальная переменная класса Inner
         void display() {
             System.out.println("вывод outer_x = " + outer_x);
         }
