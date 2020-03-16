@@ -8,17 +8,16 @@ public class ConvertList2Array {
     public static int[][] toArray(List<Integer> list, int cells) {
         int groups = (int) Math.ceil((double) list.size() / cells);
         int[][] array = new int[groups][cells];
-        int row = 0, cell = 0, i = 0;
+        int row = 0, cell = 0, k = 0;
         for (Integer num : list) {
-            cell = i++ % cells;
             array[row][cell] = num;
-            if (cell == cells - 1) {
-                row++;
+            cell++;
+            if (cell == cells) {
+                cell = 0; row++;
             }
         }
         return array;
     }
-
 
     public static void main(String[] args) {
         List<Integer> list = List.of(1, 2, 3, 4, 5, 6, 7);
