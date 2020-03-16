@@ -14,5 +14,9 @@ public class Item {
     public static void main(String[] args) {
 //        Item item = new Item();
         Bug bug = new Bug("Bug");
+        Item item = new Bug("Bug");
+        Bug bug2 = (Bug) item;
+        ((Bug) item).say();
+        bug2.say();
     }
 }

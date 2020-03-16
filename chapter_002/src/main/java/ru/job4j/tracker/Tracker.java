@@ -1,21 +1,21 @@
 package ru.job4j.tracker;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Tracker {
     /**
      * Массив для хранения заявок.
      */
-    private final Item[] items = new Item[100];
+//    private final Item[] items = new Item[100];
+    private final List<Item> items = new ArrayList<Item>();
 
-    /**
-     * Указатель ячейки для новой заявки.
-     */
-    private int position = 0;
 
     public int getPosition() {
-        return position;
+        return items.size();
     }
 
     /**
@@ -24,7 +24,7 @@ public class Tracker {
      */
     public Item add(Item item) {
         item.setId(this.generateId());
-        items[this.position++] = item;
+        items.add(item);
         return item;
     }
 
@@ -37,12 +37,7 @@ public class Tracker {
         if (index == -1) {
             return false;
         } else {
-            int start = index + 1;
-            int distPos = index;
-            int size = position - index;
-            System.arraycopy(this.items, start, this.items, distPos, size);
-            this.items[position] = null;
-            position--;
+            this.items.remove(index);
             return true;
         }
     }
@@ -62,8 +57,8 @@ public class Tracker {
      * Метод  возвращает копию массива this.items без null элементов (без пустых клеток)
      * @return копия массива this.items без null элементов (без пустых клеток)
      */
-    public Item[] findAll() {
-        return Arrays.copyOf(this.items, position);
+    public List<Item> findAll() {
+        return this.items;
     }
 
 
@@ -74,17 +69,14 @@ public class Tracker {
      * @param key ключевое слово
      * @return массив Item с эл-ми, у которых поле name совпадает с key
      */
-    public Item[] findByName(String key) {
-        Item[] itemsWithKeywords = new Item[this.position];
-        int size = 0;
-        for (int index = 0; index < this.position; index++) {
-            Item item = this.items[index];
+    public List<Item> findByName(String key) {
+        List<Item> itemsWithKeywords = new ArrayList<Item>();
+        for (int index = 0; index < this.items.size(); index++) {
+            Item item = this.items.get(index);
             if (item.getName().equals(key)) {
-                itemsWithKeywords[size] = item;
-                size++;
+                itemsWithKeywords.add(item);
             }
         }
-        itemsWithKeywords = Arrays.copyOf(itemsWithKeywords, size);
         return itemsWithKeywords;
     }
 
@@ -97,8 +89,8 @@ public class Tracker {
      */
     public Item findById(String id) {
         Item item = null;
-        for (int index = 0; index < position; index++) {
-            Item current = items[index];
+        for (int index = 0; index < items.size(); index++) {
+            Item current = items.get(index);
             if (current.getId().equals(id)) {
                 item = current;
                 break;
@@ -110,8 +102,8 @@ public class Tracker {
 
     private int indexOf(String id) {
         int rsl = -1;
-        for (int index = 0; index < position; index++) {
-            if (items[index].getId().equals(id)) {
+        for (int index = 0; index < items.size(); index++) {
+            if (items.get(index).getId().equals(id)) {
                 rsl = index;
                 break;
             }
@@ -130,7 +122,7 @@ public class Tracker {
             return false;
         } else {
             item.setId(id);
-            this.items[index] = item;
+            this.items.set(index, item);
             return true;
         }
     }
