@@ -15,19 +15,21 @@ public class BankService {
     }
 
     public void addAccount(String passport, Account account) {
-        User user = findByPassport(passport);
-        List<Account> accounts = users.get(user);
-        int ind = accounts.indexOf(account);
-        if (accounts.indexOf(account) == -1) {
-            accounts.add(account);
+        if (passport != null) {
+            User user = findByPassport(passport);
+            List<Account> accounts = users.get(user);
+            int ind = accounts.indexOf(account);
+            if (accounts.indexOf(account) == -1) {
+                accounts.add(account);
+            }
+            users.put(user, accounts);
         }
-        users.put(user, accounts);
     }
 
     public User findByPassport(String passport) {
         User rst = null;
         for (User user : users.keySet()) {
-            if (user.getPassport().equals(passport)) {
+            if (passport != null && user.getPassport().equals(passport)) {
                 rst = user;
                 break;
             }

@@ -1,8 +1,10 @@
 package ru.job4j.bank;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.*;
 
 public class BankServiceTest {
@@ -13,6 +15,15 @@ public class BankServiceTest {
         BankService bank = new BankService();
         bank.addUser(user);
         assertThat(bank.findByPassport("3434"), is(user));
+    }
+
+    @Test
+    public void addAccountWithoutPassport() {
+        User user = new User(null, "Petr Arsentev");
+        BankService bank = new BankService();
+        bank.addUser(user);
+        bank.addAccount(user.getPassport(), new Account("5546", 150D));
+        assertThat(bank.findByPassport(null), Matchers.is(nullValue()));
     }
 
     @Test
