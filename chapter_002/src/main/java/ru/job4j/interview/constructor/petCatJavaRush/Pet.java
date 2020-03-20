@@ -1,4 +1,4 @@
-package ru.job4j.interview.constructor.PetCatJavaRush;
+package ru.job4j.interview.constructor.petCatJavaRush;
 
 class Pet
 {

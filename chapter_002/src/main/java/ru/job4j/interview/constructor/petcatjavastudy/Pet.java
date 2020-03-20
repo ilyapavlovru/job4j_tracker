@@ -1,4 +1,4 @@
-package ru.job4j.interview.constructor.PetCatJavastudy;
+package ru.job4j.interview.constructor.petcatjavastudy;
 
 public class Pet {
     private String name;

@@ -2,10 +2,10 @@ package ru.job4j.interview.composition;
 
 public class ClassA extends SuperClass {
     @Override
-    public void doSomething(){
+    public void doSomething() {
         System.out.println("Какая-то реализация класса A");
     }
     //собственный метод класса  ClassA
-    public void methodA(){
+    public void methodA() {
     }
 }

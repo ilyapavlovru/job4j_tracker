@@ -5,15 +5,15 @@ public class ClassC {
     ClassA objA = new ClassA();
     ClassB objB = new ClassB();
 
-    public void test(){
+    public void test() {
         objA.doSomething();
     }
 
-    public void methodA(){
+    public void methodA() {
         objA.methodA();
     }
 
-    public void methodB(){
+    public void methodB() {
         objB.methodB();
     }
 }

@@ -1,11 +1,10 @@
-package ru.job4j.interview.DemoPackages.PackageA;
+package ru.job4j.interview.demopackages.packagea;
 
-class ClassA1 // нет явно заданного спецификатора public, доступ по умолчанию
-{
+class ClassA1 { // нет явно заданного спецификатора public, доступ по умолчанию
+
     int a1;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // доступ к классу Class2 из класса Class1 - корректно, классы в одном пакете
         ClassA2 cA2 = new ClassA2();
         cA2.a2 = 109;

@@ -1,8 +1,7 @@
-package ru.job4j.interview.DemoPackages.PackageB;
+package ru.job4j.interview.demopackages.packageb;
 
 // нет явно заданного спецификатора public, доступ по умолчанию (в границах пакета)
-class ClassB2
-{
+class ClassB2 {
     int b2; // внутренняя переменная
 
     // инициализация работает, так как классы в одном пакете PackageB

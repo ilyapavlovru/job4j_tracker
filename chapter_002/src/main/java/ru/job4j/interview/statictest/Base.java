@@ -1,4 +1,4 @@
-package ru.job4j.interview.Static;
+package ru.job4j.interview.statictest;
 
 
 // Суперкласс

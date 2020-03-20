@@ -1,13 +1,13 @@
 package ru.job4j.poly;
 
-public class Bus implements Transport{
+public class Bus implements Transport {
 
     private double volume;
     private double passengers;
 
     @Override
     public void drive() {
-        volume-=10;
+        volume -= 10;
     }
 
     @Override

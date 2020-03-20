@@ -1,10 +1,10 @@
 package ru.job4j.interview.composition2;
 
-public class ClassC{
+public class ClassC {
 
-    public void methodC(){
+    public void methodC() {
     }
 
-    public void test(){
+    public void test() {
     }
 }
