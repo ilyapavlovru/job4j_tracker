@@ -22,7 +22,7 @@ public class BankServiceTest {
         User user = new User(null, "Petr Arsentev");
         BankService bank = new BankService();
         bank.addUser(user);
-        bank.addAccount(user.getPassport(), new Account("5546", 150D));
+        bank.addAccount(user.getPassport(), new Account("5546", 150D));  // не добавится к пользователю с null паспортом
         assertThat(bank.findByPassport(null), Matchers.is(nullValue()));
     }
 
