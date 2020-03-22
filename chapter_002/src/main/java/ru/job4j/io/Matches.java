@@ -17,7 +17,7 @@ public class Matches {
             int select = Integer.parseInt(input.nextLine());
             numMatches -= select;
             System.out.println("Количество оставшихся спичек: " + numMatches);
-            if (numMatches <= 0 ) {
+            if (numMatches <= 0) {
                 System.out.println("Игра завершена. Последние спички забрал игрок " + player);
                 run = false;
             }

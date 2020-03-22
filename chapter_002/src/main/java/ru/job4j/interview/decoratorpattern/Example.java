@@ -1,43 +1,43 @@
 package ru.job4j.interview.decoratorpattern;
 
-abstract class Car{
+abstract class Car {
     String name = "Unnamed Car";
 
-    public String getInfo(){
+    public String getInfo() {
         return name;
     }
 
     public abstract int getPrice();
 }
 
-abstract class Decorator extends Car{
+abstract class Decorator extends Car {
     public abstract String getInfo();
 }
 
-class AudiA3 extends Car{
-    public AudiA3(){
+class AudiA3 extends Car {
+    public AudiA3() {
         name = "Audi A3";
     }
 
-    public int getPrice(){
+    public int getPrice() {
         return 10_000;
     }
 }
 
-class AudiA4 extends Car{
-    public AudiA4(){
+class AudiA4 extends Car {
+    public AudiA4() {
         name = "Audi A4";
     }
 
-    public int getPrice(){
+    public int getPrice() {
         return 15_000;
     }
 }
 
-class GPS extends Decorator{
+class GPS extends Decorator {
     Car car;
 
-    public GPS(Car car){
+    public GPS(Car car) {
         this.car = car;
     }
 
@@ -51,10 +51,10 @@ class GPS extends Decorator{
 
 }
 
-class AirCondition extends Decorator{
+class AirCondition extends Decorator {
     Car car;
 
-    public AirCondition(Car car){
+    public AirCondition(Car car) {
         this.car = car;
     }
 
@@ -67,7 +67,7 @@ class AirCondition extends Decorator{
     }
 }
 
-public class Example{
+public class Example {
     public static void main(String[] args) {
         Car car1 = new AudiA3();
         System.out.println(car1.getInfo());

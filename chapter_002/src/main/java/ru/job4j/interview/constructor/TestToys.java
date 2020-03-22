@@ -6,7 +6,7 @@ class Toy {
     }
 }
 
-class Doll extends Toy{
+class Doll extends Toy {
     public void printName() {
         System.out.println("Doll");
     }

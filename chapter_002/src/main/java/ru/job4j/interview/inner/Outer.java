@@ -1,7 +1,7 @@
 package ru.job4j.interview.inner;
 
 class Outer {
-    int outer_x = 100;
+    int outerX = 100;
 
     void test() {
         Inner inner = new Inner();
@@ -22,7 +22,7 @@ class Outer {
     class Inner {
         int y = 10;  // переменная класса Inner
         void display() {
-            System.out.println("вывод outer_x = " + outer_x);
+            System.out.println("вывод outer_x = " + outerX);
         }
     }
 }

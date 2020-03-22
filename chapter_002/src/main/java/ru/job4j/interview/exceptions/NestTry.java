@@ -5,12 +5,15 @@ public class NestTry {
         try {
             int a = args.length;
             int b = 42 / a;
-            System.out.println ( "a " + a) ;
+            System.out.println("a " + a);
 
             try {
-                if(a==1) a = a / (a - a) ;
-                if(a==2) {
-                    int c[] = {1};
+                if (a == 1) {
+                    a = a / (a - a);
+                }
+                if (a == 2) {
+                    int[] c = new int[1];
+                    c[0] = 1;
                     c[42] = 99;
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
