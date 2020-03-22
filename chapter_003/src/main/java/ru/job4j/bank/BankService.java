@@ -17,12 +17,14 @@ public class BankService {
     public void addAccount(String passport, Account account) {
         if (passport != null) {
             User user = findByPassport(passport);
-            List<Account> accounts = users.get(user);
-            int ind = accounts.indexOf(account);
-            if (accounts.indexOf(account) == -1) {
-                accounts.add(account);
+            if (user != null) {
+                List<Account> accounts = users.get(user);
+                int ind = accounts.indexOf(account);
+                if (accounts.indexOf(account) == -1) {
+                    accounts.add(account);
+                }
+                users.put(user, accounts);
             }
-            users.put(user, accounts);
         }
     }
 

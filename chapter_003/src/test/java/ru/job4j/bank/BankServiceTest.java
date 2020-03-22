@@ -18,6 +18,16 @@ public class BankServiceTest {
     }
 
     @Test
+    public void findByPassportButThereIsNoUser() {
+        User user = new User("3434", "Petr Arsentev");
+        BankService bank = new BankService();
+        bank.addUser(user);
+        User expected = user;
+        User result = bank.findByPassport("34341");
+        assertThat(bank.findByPassport("3434"), is(user));
+    }
+
+    @Test
     public void addAccountWithoutPassport() {
         User user = new User(null, "Petr Arsentev");
         BankService bank = new BankService();
