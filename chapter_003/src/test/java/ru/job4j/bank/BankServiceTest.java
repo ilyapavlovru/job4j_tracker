@@ -22,18 +22,7 @@ public class BankServiceTest {
         User user = new User("3434", "Petr Arsentev");
         BankService bank = new BankService();
         bank.addUser(user);
-        User expected = user;
-        User result = bank.findByPassport("34341");
-        assertThat(bank.findByPassport("3434"), is(user));
-    }
-
-    @Test
-    public void addAccountWithoutPassport() {
-        User user = new User(null, "Petr Arsentev");
-        BankService bank = new BankService();
-        bank.addUser(user);
-        bank.addAccount(user.getPassport(), new Account("5546", 150D));  // не добавится к пользователю с null паспортом
-        assertThat(bank.findByPassport(null), Matchers.is(nullValue()));
+        assertThat(bank.findByPassport("34341"), is(nullValue()));
     }
 
     @Test
