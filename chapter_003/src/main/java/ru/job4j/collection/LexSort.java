@@ -12,6 +12,6 @@ public class LexSort implements Comparator<String> {
         int leftDigit = Integer.parseInt(leftStrDigit);
         int rightDigit = Integer.parseInt(rightStrDigit);
 
-        return leftDigit - rightDigit;
+        return  Integer.compare(leftDigit, rightDigit);
     }
 }
