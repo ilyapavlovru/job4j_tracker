@@ -1,14 +1,16 @@
 package ru.job4j.collection;
 
-
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class FreezeStr {
 
     public static boolean eq(String left, String right) {
         boolean rsl = true;
+
+        if (left.length() != right.length()) {
+            return false;
+        }
+
         LinkedList<String> leftList = new LinkedList<>();
         String[] leftListSpl = left.split("");
         String[] rightListSpl = right.split("");

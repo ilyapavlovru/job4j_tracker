@@ -21,4 +21,9 @@ public class FreezeStrTest {
     public void whenNotMultiEq() {
         assertThat(FreezeStr.eq("heloo", "hello"), is(false));
     }
+
+    @Test
+    public void whenDifferentLengths() {
+        assertThat(FreezeStr.eq("Hello", "Hello "), is(false));
+    }
 }
