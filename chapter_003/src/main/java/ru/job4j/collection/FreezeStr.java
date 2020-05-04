@@ -1,9 +1,11 @@
 package ru.job4j.collection;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class FreezeStr {
 
+    // Временная сложность O(n log(n))
     public static boolean eq(String left, String right) {
         boolean rsl = true;
 
@@ -12,6 +14,7 @@ public class FreezeStr {
         }
 
         LinkedList<String> leftList = new LinkedList<>();
+        LinkedList<String> rightList = new LinkedList<>();
         String[] leftListSpl = left.split("");
         String[] rightListSpl = right.split("");
 
@@ -19,14 +22,21 @@ public class FreezeStr {
             leftList.add(s);
         }
 
-        for (String string : rightListSpl) {
-            if (leftList.contains(string)) {
-                leftList.remove(string);
-            } else {
+        for (String s : rightListSpl) {
+            rightList.add(s);
+        }
+
+        Collections.sort(leftList);
+        Collections.sort(rightList);
+
+        int i = 0;
+        for (String string : leftList) {
+            if (!string.equals(rightList.get(i++))) {
                 rsl = false;
                 break;
             }
         }
+
         return rsl;
     }
 
