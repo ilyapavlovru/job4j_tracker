@@ -1,39 +1,47 @@
 package ru.job4j.collection;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class FreezeStr {
-
-    // Временная сложность O(n log(n))
     public static boolean eq(String left, String right) {
-        boolean rsl = true;
+        boolean rsl = false;
 
         if (left.length() != right.length()) {
             return false;
         }
 
-        LinkedList<String> leftList = new LinkedList<>();
-        LinkedList<String> rightList = new LinkedList<>();
+        HashSet<String> leftSet = new HashSet<String>();
+        HashSet<String> rightSet = new HashSet<String>();
         String[] leftListSpl = left.split("");
         String[] rightListSpl = right.split("");
 
+        int leftBytesSum = 0;
+        int rightBytesSum = 0;
+        byte[] leftBytes = left.getBytes();
+        byte[] rightBytes = right.getBytes();
+
+        for(byte b : leftBytes) {
+            leftBytesSum += b;
+        }
+
+        for(byte b : rightBytes) {
+            rightBytesSum += b;
+        }
+
         for (String s : leftListSpl) {
-            leftList.add(s);
+            leftSet.add(s);
         }
 
         for (String s : rightListSpl) {
-            rightList.add(s);
+            rightSet.add(s);
         }
 
-        Collections.sort(leftList);
-        Collections.sort(rightList);
-
-        int i = 0;
-        for (String string : leftList) {
-            if (!string.equals(rightList.get(i++))) {
-                rsl = false;
-                break;
+        if (leftSet.equals(rightSet)) {
+            if (leftBytesSum == rightBytesSum) {
+                System.out.println("");
+                rsl = true;
             }
         }
 
