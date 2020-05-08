@@ -22,11 +22,11 @@ public class FreezeStr {
         byte[] leftBytes = left.getBytes();
         byte[] rightBytes = right.getBytes();
 
-        for(byte b : leftBytes) {
+        for (byte b : leftBytes) {
             leftBytesSum += b;
         }
 
-        for(byte b : rightBytes) {
+        for (byte b : rightBytes) {
             rightBytesSum += b;
         }
 

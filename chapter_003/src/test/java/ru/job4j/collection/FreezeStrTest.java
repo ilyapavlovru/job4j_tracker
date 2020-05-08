@@ -26,4 +26,9 @@ public class FreezeStrTest {
     public void whenDifferentLengths() {
         assertThat(FreezeStr.eq("Hello", "Hello "), is(false));
     }
+
+    @Test
+    public void whenDigits() {
+        assertThat(FreezeStr.eq("122", "112"), is(false));
+    }
 }
