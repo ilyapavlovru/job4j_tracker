@@ -5,40 +5,29 @@ import java.util.HashMap;
 public class FreezeStr {
     public static boolean eq(String left, String right) {
         boolean rsl = false;
-
         if (left.length() != right.length()) {
             return false;
         }
-
-        HashMap<String, Integer> leftMap = new HashMap<>();
-        HashMap<String, Integer> rightMap = new HashMap<>();
-        String[] leftListSpl = left.split("");
-        String[] rightListSpl = right.split("");
-
-        for (String s : leftListSpl) {
-            if (leftMap.containsKey(s)) {
-                Integer value = leftMap.get(s);
-                value++;
-                leftMap.put(s, value);
-            } else {
-                leftMap.put(s, 1);
+        HashMap<Character, Integer> leftMap = new HashMap<>();
+        HashMap<Character, Integer> rightMap = new HashMap<>();
+        char[] leftListSpl = left.toCharArray();
+        char[] rightListSpl = right.toCharArray();
+        for (char c : leftListSpl) {
+            if (leftMap.putIfAbsent(c, 1) != null) {
+                leftMap.computeIfPresent(c, (key, val) -> val + 1);
             }
         }
-
-        for (String s : rightListSpl) {
-            if (rightMap.containsKey(s)) {
-                Integer value = rightMap.get(s);
-                value++;
-                rightMap.put(s, value);
-            } else {
-                rightMap.put(s, 1);
+        for (char c : rightListSpl) {
+            if (rightMap.putIfAbsent(c, 1) != null) {
+                rightMap.computeIfPresent(c, (key, val) -> val + 1);
+            }
+            if (leftMap.get(c) == null) {
+                return false;
             }
         }
-
         if (leftMap.equals(rightMap)) {
             rsl = true;
         }
-
         return rsl;
     }
 
