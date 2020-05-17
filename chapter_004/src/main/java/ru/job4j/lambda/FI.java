@@ -38,6 +38,16 @@ public class FI {
         for (Attachment at : atts) {
             System.out.println(at.toString());
         }
+
+        System.out.println("*** Sort desc by name ***");
+        Comparator<Attachment> cmpDescText = (left, right) -> {
+            System.out.println("compare - " + right.getName() + " : " + left.getName());
+            return right.getName().compareTo(left.getName());
+        };
+        Arrays.sort(atts, cmpDescText);
+        for (Attachment at : atts) {
+            System.out.println(at.toString());
+        }
     }
 
 }
