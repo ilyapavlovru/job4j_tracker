@@ -19,7 +19,7 @@ public class SchoolTest {
                 new Student("Sidorov", 1)
         );
 
-        List<Student> result = collect(students, isScoreMoreThan70AndLessThan100());
+        List<Student> result = collect(students, att -> att.getScore() >= 70 & att.getScore() <= 100);
         List<Student> expected = Arrays.asList(
                 new Student("Ivanov", 100),
                 new Student("Petrov", 70)
@@ -36,7 +36,7 @@ public class SchoolTest {
                 new Student("Sidorov", 1)
         );
 
-        List<Student> result = collect(students, isScoreMoreThan50AndLessThan70());
+        List<Student> result = collect(students, att -> att.getScore() >= 50 & att.getScore() < 70);
         List<Student> expected = Arrays.asList(
                 new Student("Sobolev", 55)
         );
@@ -52,7 +52,7 @@ public class SchoolTest {
                 new Student("Sidorov", 1)
         );
 
-        List<Student> result = collect(students, isScoreMoreThan0AndLessThan50());
+        List<Student> result = collect(students, att -> att.getScore() > 0 & att.getScore() < 50);
         List<Student> expected = Arrays.asList(
                 new Student("Sidorov", 1)
         );
