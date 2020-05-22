@@ -3,7 +3,9 @@ package ru.job4j.stream;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -56,6 +58,23 @@ public class SchoolTest {
         List<Student> expected = Arrays.asList(
                 new Student("Sidorov", 1)
         );
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void collectStudentsToMapTest() {
+        List<Student> students = Arrays.asList(
+                new Student("Ivanov", 100),
+                new Student("Petrov", 70),
+                new Student("Sobolev", 1),
+                new Student("Sobolev", 1)
+        );
+
+        Map<String, Integer> result = collectStudentsToMap(students);
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("Ivanov", 100);
+        expected.put("Petrov", 70);
+        expected.put("Sobolev", 1);
         assertThat(result, is(expected));
     }
 }
