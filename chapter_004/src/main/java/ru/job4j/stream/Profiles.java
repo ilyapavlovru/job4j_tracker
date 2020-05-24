@@ -14,12 +14,11 @@ public class Profiles {
     }
 
     List<Address> collectSortedDistinctAddresses(List<Profile> profiles) {
-        Comparator<Address> nameComparator = (h1, h2) -> h1.getCity().compareTo(h2.getCity());
         return profiles.stream()
                 .map(
                         profile -> profile.getAddress()
                 )
-                .sorted(nameComparator)
+                .sorted(Comparator.comparing(Address::getCity))
                 .distinct()
                 .collect(Collectors.toList());
     }
