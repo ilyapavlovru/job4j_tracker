@@ -3,6 +3,7 @@ package ru.job4j.stream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -13,10 +14,14 @@ public class School {
                 .collect(Collectors.<Student>toList());
     }
 
-    public static Map<String, Integer> collectStudentsToMap(List<Student> students) {
+    public static Map<String, Student> collectStudentsToMapWithDupKeyError(List<Student> students) {
         return students.stream()
-                .distinct()
-                .collect(Collectors.toMap(att -> att.getSurname(), att -> att.getScore()));
+                .collect(Collectors.toMap(Student::getSurname, Function.identity()));
+    }
+
+    public static Map<String, Student> collectStudentsToMapWithDupKey(List<Student> students) {
+        return students.stream()
+                .collect(Collectors.toMap(Student::getSurname, Function.identity(), (existing, replacement) -> existing));
     }
 
     public static void main(String[] args) {
@@ -27,6 +32,6 @@ public class School {
         );
         System.out.println(collect(students, att -> att.getScore() >= 70 & att.getScore() <= 100));
 
-        System.out.println(collectStudentsToMap(students));
+        System.out.println(collectStudentsToMapWithDupKeyError(students));
     }
 }
