@@ -9,7 +9,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class StudentLevelTest {
-
     @Test
     public void whenSorted() {
         List<Student> input = new ArrayList<>();
@@ -20,6 +19,18 @@ public class StudentLevelTest {
                 new Student("Pety", 128)
         );
         assertThat(StudentLevel.levelOf(input, 20), is(expected));
+    }
+
+    @Test
+    public void whenScoreAndBound() {
+        List<Student> input = new ArrayList<>();
+        input.add(new Student("Pety", 128));
+        input.add(new Student("Masha", 28));
+        input.add(new Student("Nina", 30));
+        List<Student> expected = List.of(
+                new Student("Pety", 128)
+        );
+        assertThat(StudentLevel.levelOf(input, 31), is(expected));
     }
 
     @Test
