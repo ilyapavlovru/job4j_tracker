@@ -31,7 +31,7 @@ public class JobTest {
                 new Job("Fix bug", 2),
                 new Job("X task", 0)
         );
-        List<Job> expected = Arrays.asList(
+        List<Job> expected = List.of(
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 2),
                 new Job("Mega task", 7),
@@ -49,7 +49,7 @@ public class JobTest {
                 new Job("Fix bug", 2),
                 new Job("X task", 0)
         );
-        List<Job> expected = Arrays.asList(
+        List<Job> expected = List.of(
                 new Job("X task", 0),
                 new Job("Mega task", 7),
                 new Job("Fix bug", 1),
@@ -67,7 +67,7 @@ public class JobTest {
                 new Job("Fix bug", 2),
                 new Job("X task", 0)
         );
-        List<Job> expected = Arrays.asList(
+        List<Job> expected = List.of(
                 new Job("Mega task", 7),
                 new Job("Fix bug", 2),
                 new Job("Fix bug", 1),
@@ -85,7 +85,7 @@ public class JobTest {
                 new Job("Fix bug", 2),
                 new Job("X task", 0)
         );
-        List<Job> expected = Arrays.asList(
+        List<Job> expected = List.of(
                 new Job("X task", 0),
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 2),
@@ -103,7 +103,7 @@ public class JobTest {
                 new Job("Fix bug", 2),
                 new Job("X task", 0)
         );
-        List<Job> expected = Arrays.asList(
+        List<Job> expected = List.of(
                 new Job("X task", 0),
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 2),
