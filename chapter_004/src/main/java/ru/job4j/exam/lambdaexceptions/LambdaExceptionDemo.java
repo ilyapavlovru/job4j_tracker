@@ -1,4 +1,4 @@
-package ru.job4j.innovations;
+package ru.job4j.exam.lambdaexceptions;
 
 interface DoubleNumericArrayFunc {
     double func(double[] n) throws EmptyArrayException;

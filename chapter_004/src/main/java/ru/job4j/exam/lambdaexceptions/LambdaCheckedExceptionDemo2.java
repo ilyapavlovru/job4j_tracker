@@ -1,4 +1,4 @@
-package ru.job4j.innovations;
+package ru.job4j.exam.lambdaexceptions;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
