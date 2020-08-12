@@ -1,4 +1,4 @@
-package ru.job4j.innovations;
+package ru.job4j.exam;
 
 import java.util.ArrayList;
 import java.util.List;
