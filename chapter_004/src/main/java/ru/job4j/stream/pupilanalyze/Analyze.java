@@ -18,18 +18,15 @@ public class Analyze {
     public static List<Tuple> averageScoreBySubject(Stream<Pupil> stream) {
         // берем каждого ученика
         // и считаем средний балл по всем предметам, по которым у него есть запись
-        Map<String, Double> map =
+        return
                 stream
-                        .collect(Collectors.toMap(
-                                pupil -> pupil.getName(),
-                                subject -> subject.getSubjects()
-                                        .stream()
-                                        .mapToInt(value -> value.getScore()).average().getAsDouble()));
-
-        List<Tuple> result = map.entrySet().stream()
-                .map(entry -> new Tuple(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-        return result;
+                        .map(entry ->
+                                new Tuple(
+                                        entry.getName(),
+                                        entry.getSubjects()
+                                                .stream()
+                                                .mapToInt(value -> value.getScore()).average().getAsDouble()))
+                        .collect(Collectors.toList());
     }
 
     public static List<Tuple> averageScoreByPupil(Stream<Pupil> stream) {
@@ -48,21 +45,16 @@ public class Analyze {
     }
 
     public static Tuple bestStudent(Stream<Pupil> stream) {
-        // берем каждого ученика
-        // и считаем сумму баллов по всем предметам, по которым у него есть запись
-        Map<String, Integer> map =
+        List<Tuple> tupleList =
                 stream
-                        .collect(Collectors.toMap(
-                                pupil -> pupil.getName(),
-                                subject -> subject.getSubjects()
-                                        .stream()
-                                        .mapToInt(value -> value.getScore()).sum()));
-
-        List<Tuple> result = map.entrySet().stream()
-                .map(entry -> new Tuple(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-
-        return result.stream().max(Comparator.comparing(Tuple::getScore)).get();
+                        .map(entry ->
+                                new Tuple(
+                                        entry.getName(),
+                                        entry.getSubjects()
+                                                .stream()
+                                                .mapToInt(value -> value.getScore()).sum()))
+                        .collect(Collectors.toList());
+        return tupleList.stream().max(Comparator.comparing(Tuple::getScore)).get();
     }
 
     public static Tuple bestSubject(Stream<Pupil> stream) {

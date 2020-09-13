@@ -39,8 +39,8 @@ public class AnalyzeTest {
         );
 
         List<Tuple> expected = List.of(
-                new Tuple("Petrov", 60D),
-                new Tuple("Ivanov", 100D)
+                new Tuple("Ivanov", 100D),
+                new Tuple("Petrov", 60D)
         );
 
         assertThat(average, is(expected));
