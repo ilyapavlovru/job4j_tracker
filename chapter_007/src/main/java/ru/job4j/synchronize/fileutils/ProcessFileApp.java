@@ -2,11 +2,13 @@ package ru.job4j.synchronize.fileutils;
 
 import java.io.File;
 
+import static ru.job4j.synchronize.fileutils.ParseFile.isNotUnicode;
+
 public class ProcessFileApp {
     public static void main(String[] args) {
         ParseFile file = new ParseFile();
         file.setFile(new File("D:/readme.txt"));
-        String fileContent = file.getContent(false);
+        String fileContent = file.getContent(isNotUnicode());
         System.out.println(fileContent);
 
         SaveFile saveFile = new SaveFile();

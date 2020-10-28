@@ -1,6 +1,7 @@
 package ru.job4j.synchronize.fileutils;
 
 import java.io.*;
+import java.util.function.Predicate;
 
 public class ParseFile {
     private File file;
@@ -13,18 +14,20 @@ public class ParseFile {
         return file;
     }
 
-    public synchronized String getContent(boolean readWithoutUnicode) {
+    public static Predicate<Integer> isNotUnicode() {
+        return data -> data < 0x80;
+    }
+
+    public static Predicate<Integer> isAllData() {
+        return data -> true;
+    }
+
+    public synchronized String getContent(Predicate<Integer> predict) {
         StringBuilder output = new StringBuilder();
         try (InputStream i = new FileInputStream(file)) {
             int data;
-            if (readWithoutUnicode) {
-                while ((data = i.read()) > 0) {
-                    if (data < 0x80) {
-                        output.append((char) data);
-                    }
-                }
-            } else {
-                while ((data = i.read()) > 0) {
+            while ((data = i.read()) > 0) {
+                if (predict.test(data)) {
                     output.append((char) data);
                 }
             }
