@@ -30,6 +30,8 @@ public class Profiles {
                 new Profile("Sidorova", new Address("Moscow", "Vinogradnaya", 5, 6))
         );
         Profiles profiles = new Profiles();
+        clients.forEach(System.out::println);
+        System.out.println("*********");
         List<Address> addresses = profiles.collect(clients);
         addresses.forEach(System.out::println);
         System.out.println();

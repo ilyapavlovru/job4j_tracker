@@ -24,4 +24,12 @@ public class Profile {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "surname='" + surname + '\'' +
+                ", address=" + address +
+                '}';
+    }
 }
