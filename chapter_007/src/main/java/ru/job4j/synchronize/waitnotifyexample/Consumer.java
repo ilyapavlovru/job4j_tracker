@@ -10,6 +10,7 @@ public class Consumer implements Runnable {
     @Override
     public void run() {
         for (int i = 1; i < 6; i++) {
+            System.out.println(Thread.currentThread().getName() + ": Consumer пытается забрать продукт... счетчик i равен " + i);
             store.get();
         }
     }

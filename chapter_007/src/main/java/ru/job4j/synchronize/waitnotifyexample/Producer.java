@@ -11,6 +11,7 @@ public class Producer implements Runnable {
     @Override
     public void run() {
         for (int i = 1; i < 6; i++) {
+            System.out.println(Thread.currentThread().getName() + ": Producer пытается добавить продукт... счетчик i равен " + i);
             store.put();
         }
     }
