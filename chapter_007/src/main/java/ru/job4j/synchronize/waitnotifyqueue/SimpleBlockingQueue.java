@@ -29,6 +29,7 @@ public class SimpleBlockingQueue<T> {
                 System.out.println(Thread.currentThread().getName() + ": Производитель ожидает..." + "Элементов в очереди: " + queue.size());
                 wait();
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         queue.add(value);
@@ -48,6 +49,7 @@ public class SimpleBlockingQueue<T> {
                 System.out.println(Thread.currentThread().getName() + ": Потребитель ожидает..." + "Элементов в очереди: " + queue.size());
                 wait();
             } catch (InterruptedException e){
+                e.printStackTrace();
             }
         }
         System.out.println(Thread.currentThread().getName() + ": Потребитель извлек 1 элемент. " + "Элементов в очереди: " + (queue.size() - 1));
