@@ -22,7 +22,7 @@ public class SequenceGenerator {
      * @return
      */
     public BigInteger next() {
-        BigInteger value;
+        BigInteger value;  // текущее значение
         BigInteger next;  // следующее значение
         do {
             value = element.get();
