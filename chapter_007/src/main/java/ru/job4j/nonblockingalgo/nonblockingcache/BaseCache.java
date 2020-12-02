@@ -1,6 +1,5 @@
 package ru.job4j.nonblockingalgo.nonblockingcache;
 
-import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,16 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @ThreadSafe
 public class BaseCache {
-    @GuardedBy("this")
     private ConcurrentHashMap<Integer, Base> bases = new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger();
 
-    synchronized boolean add(Base model) {
-        if (!bases.containsValue(model)) {
-            bases.put(id.incrementAndGet(), model);
-            return true;
-        }
-        return false;
+    boolean add(Base model) {
+        return bases.putIfAbsent(id.incrementAndGet(), model) == null;
     }
 
     boolean update(Base model) {
