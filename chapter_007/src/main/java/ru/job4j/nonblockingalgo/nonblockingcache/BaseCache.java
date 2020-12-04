@@ -15,24 +15,16 @@ public class BaseCache {
     }
 
     boolean update(Base model) {
-        System.out.println(Thread.currentThread().getName() + ": is trying to update model " + model);
         int id = model.id;
         int ver = model.version;  // текущая версия
         try {
             bases.computeIfPresent(id, (key, value) -> {
                         if (value.version == ver) {
-                            System.out.println(Thread.currentThread().getName() + ": update successful");
-                            System.out.println(Thread.currentThread().getName() + ": model before: id = " + id + ", ver = " + ver);
-                            System.out.println(Thread.currentThread().getName() + ": model after: id = " + id + ", ver = " + (ver + 1));
                             return new Base(id, ver + 1);
-                        } else {
-                            System.out.println(Thread.currentThread().getName() + ": update is NOT successful");
-                            throw new OptimisticException(Thread.currentThread().getName() + ": try to update but versions not equal");
                         }
+                        throw new OptimisticException(Thread.currentThread().getName() + ": try to update but versions not equal");
                     }
             );
-            System.out.println(Thread.currentThread().getName() + ": finished computeIfPresent. "
-                    + "Updated model is " + bases.get(model.id));
             return true;
         } catch (OptimisticException e) {
             System.out.println(Thread.currentThread().getName() + ": in catch block of OptimisticException - try to update but versions not equal");
