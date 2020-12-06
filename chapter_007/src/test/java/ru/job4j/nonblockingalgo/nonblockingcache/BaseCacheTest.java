@@ -25,9 +25,7 @@ public class BaseCacheTest {
         Thread thread1 = new Thread(
                 () -> {
                     try {
-                        if (!baseCache.update(model1)) {
-                            throw new OptimisticException("Throw OptimisticException in Thread");
-                        }
+                        baseCache.update(model1);
                     } catch (Exception e) {
                         ex.set(e);
                     }
@@ -37,9 +35,7 @@ public class BaseCacheTest {
         Thread thread2 = new Thread(
                 () -> {
                     try {
-                        if (!baseCache.update(model1)) {
-                            throw new OptimisticException("Throw OptimisticException in Thread");
-                        }
+                        baseCache.update(model1);
                     } catch (Exception e) {
                         ex.set(e);
                     }
@@ -63,9 +59,7 @@ public class BaseCacheTest {
         Thread thread1 = new Thread(
                 () -> {
                     try {
-                        if (!baseCache.update(staticModel1)) {
-                            throw new OptimisticException("Throw OptimisticException in Thread");
-                        }
+                        baseCache.update(staticModel1);
                         staticModel1 = baseCache.getBases().get(staticModel1.id);
                     } catch (Exception e) {
                         ex.set(e);
@@ -77,9 +71,7 @@ public class BaseCacheTest {
                 () -> {
                     try {
                         Thread.sleep(1000);
-                        if (!baseCache.update(staticModel1)) {
-                            throw new OptimisticException("Throw OptimisticException in Thread");
-                        }
+                        baseCache.update(staticModel1);
                     } catch (Exception e) {
                         ex.set(e);
                     }
