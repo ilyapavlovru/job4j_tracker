@@ -28,18 +28,7 @@ public class BaseCache {
     }
 
     boolean delete(Base model) {
-        int id = model.id;
-        int ver = model.version;  // текущая версия
-        // set new value is null and computeIfPresent method will remove the entry for the specified key
-        bases.computeIfPresent(id, (key, value) -> {
-                    if (value.version == ver) {
-                        return null;
-                    } else {
-                        throw new OptimisticException("Throw OptimisticException in Thread");
-                    }
-                }
-        );
-        return true;
+        return bases.values().removeIf(value -> value.equals(model));
     }
 
     public ConcurrentHashMap<Integer, Base> getBases() {
