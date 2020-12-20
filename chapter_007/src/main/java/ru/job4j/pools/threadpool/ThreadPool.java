@@ -1,7 +1,5 @@
 package ru.job4j.pools.threadpool;
 
-import ru.job4j.whaitnotifynotifyall.waitnotifyqueuejunit.SimpleBlockingQueue;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ class MyTask implements Runnable {
 
 public class ThreadPool {
     private final static List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();  // todo make static?
+    private final static SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();
 
     public void work(Runnable job) {
         tasks.offer(job);
@@ -42,18 +40,13 @@ public class ThreadPool {
     public static void main(String[] args) throws InterruptedException {
 
         ThreadPool threadPool = new ThreadPool();
-//
-//        // закидываем 10 задач в очередь задач
-//        for (int i = 0; i < 10; i++) {
-//            threadPool.work(new MyTask());
-//        }
+        int size = Runtime.getRuntime().availableProcessors();
 
-
-        // производитель 3 раза добавляет задачу MyTask в очередь
+        // производитель 5 раз добавляет задачу MyTask в очередь
         final Thread producer = new Thread(
                 () -> {
-                    for (int index = 0; index != 3; index++) {
-                        threadPool.tasks.offer(new MyTask(5000));
+                    for (int index = 0; index != 5; index++) {
+                        threadPool.work(new MyTask(5000));
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException e) {
@@ -61,22 +54,20 @@ public class ThreadPool {
                             e.printStackTrace();
                         }
                     }
-                    threadPool.tasks.off(); // посылаем сигнал очереди, что новых задач больше не будет
+                    threadPool.shutdown(); // посылаем сигнал очереди, что новых задач больше не будет
                 }
         );
-
-        int size = Runtime.getRuntime().availableProcessors();
 
         for (int i = 0; i < size; i++) {
             threads.add(new Thread(
                     () -> {
                         System.out.println(Thread.currentThread().getName() + ": Consumer поток запущен");
-                        while (threadPool.tasks.isFlag() || threadPool.tasks.getQueueSize() > 0) {
+                        while (tasks.isFlag() || tasks.getQueueSize() > 0) {
                             try {
                                 System.out.println(Thread.currentThread().getName() + ": Consumer пытается извлечь элемент..");
 
                                 // получаем очередную задачу из очереди
-                                MyTask task = (MyTask) threadPool.tasks.poll();
+                                MyTask task = (MyTask) tasks.poll();
                                 System.out.println(Thread.currentThread().getName() + ": Consumer поток пробует запустить задачу на выполнение, задача: " + task);
                                 if (task != null) {
                                     task.run();
