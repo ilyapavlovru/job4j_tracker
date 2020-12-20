@@ -38,7 +38,7 @@ public class SimpleBlockingQueue<T> {
      * @param value
      */
     public synchronized void offer(T value) {
-        System.out.println(Thread.currentThread().getName() + ": Производитель пытается добавить 1 элемент. " + "Элементов в очереди: " + queue.size());
+        System.out.println(Thread.currentThread().getName() + ": Производитель пытается добавить 1 элемент. " + "Элементов в очереди было: " + queue.size());
         while (queue.size() >= total) {
             System.out.println(Thread.currentThread().getName() + ": Много элементов! " + "Элементов в очереди: " + queue.size());
             try {
@@ -49,7 +49,7 @@ public class SimpleBlockingQueue<T> {
             }
         }
         queue.add(value);
-        System.out.println(Thread.currentThread().getName() + ": Производитель добавил 1 элемент. " + "Элементов в очереди: " + queue.size());
+        System.out.println(Thread.currentThread().getName() + ": Производитель добавил 1 элемент. " + "Элементов в очереди стало: " + queue.size());
         notify();
     }
 
@@ -68,5 +68,9 @@ public class SimpleBlockingQueue<T> {
         System.out.println(Thread.currentThread().getName() + ": Потребитель извлек 1 элемент. " + "Элементов в очереди: " + (queue.size() - 1));
         notify();
         return queue.poll();
+    }
+
+    public synchronized int getQueueSize() {
+        return queue.size();
     }
 }
