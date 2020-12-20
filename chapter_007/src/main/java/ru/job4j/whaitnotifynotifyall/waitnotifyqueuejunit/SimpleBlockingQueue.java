@@ -23,6 +23,7 @@ public class SimpleBlockingQueue<T> {
     private boolean flag = true;
 
     public synchronized void off() {
+        System.out.println(Thread.currentThread().getName() + ": Производитель завершил добавление элементов в очередь и послал сигнал flag = false; и notify()");
         flag = false;
         notify();
     }
@@ -60,7 +61,7 @@ public class SimpleBlockingQueue<T> {
      */
     public synchronized T poll() throws InterruptedException {
         System.out.println(Thread.currentThread().getName() + ": Потребитель пытается извлечь 1 элемент. " + "Элементов в очереди: " + queue.size());
-        while (queue.size() < 1) {
+        while (queue.size() < 1 && flag) {
             System.out.println(Thread.currentThread().getName() + ": Нет элементов! " + "Элементов в очереди: " + queue.size());
             System.out.println(Thread.currentThread().getName() + ": Потребитель ожидает..." + "Элементов в очереди: " + queue.size());
             wait();
@@ -71,6 +72,7 @@ public class SimpleBlockingQueue<T> {
     }
 
     public synchronized int getQueueSize() {
+        System.out.println(Thread.currentThread().getName() + ": Потребитель проверяет значение getQueueSize = " + queue.size());
         return queue.size();
     }
 }

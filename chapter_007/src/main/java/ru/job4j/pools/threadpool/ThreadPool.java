@@ -7,8 +7,6 @@ import java.util.List;
 
 class MyTask implements Runnable {
 
-    private boolean isDone;
-
     private final long waitTime;
 
     public MyTask(int timeInMillis) {
@@ -25,18 +23,13 @@ class MyTask implements Runnable {
             System.out.println(Thread.currentThread().getName() + ": Поймали catch потока MyTask");
             Thread.currentThread().interrupt();
         }
-        System.out.printf("%s задача finished... Execution time is %s ms\n", Thread.currentThread().getName(), waitTime);
-        isDone = true;
-    }
-
-    boolean isDone() {
-        return isDone;
+        System.out.printf("%s: задача finished... Execution time is %s ms\n", Thread.currentThread().getName(), waitTime);
     }
 }
 
 public class ThreadPool {
-    private final List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();
+    private final static List<Thread> threads = new LinkedList<>();
+    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();  // todo make static?
 
     public void work(Runnable job) {
         tasks.offer(job);
@@ -72,56 +65,44 @@ public class ThreadPool {
                 }
         );
 
+        int size = Runtime.getRuntime().availableProcessors();
 
-        // запускаем 1-й поток потребитель/выполнитель задач
-        final Thread consumer = new Thread(
-                () -> {
-                    System.out.println(Thread.currentThread().getName() + ": Consumer1 поток запущен");
-                    while (threadPool.tasks.isFlag() || threadPool.tasks.getQueueSize() > 0) {
-                        try {
-                            System.out.println(Thread.currentThread().getName() + ": Consumer1 пытается извлечь элемент..");
+        for (int i = 0; i < size; i++) {
+            threads.add(new Thread(
+                    () -> {
+                        System.out.println(Thread.currentThread().getName() + ": Consumer поток запущен");
+                        while (threadPool.tasks.isFlag() || threadPool.tasks.getQueueSize() > 0) {
+                            try {
+                                System.out.println(Thread.currentThread().getName() + ": Consumer пытается извлечь элемент..");
 
-                            // получаем очередную задачу из очереди
-                            MyTask task = (MyTask) threadPool.tasks.poll();
-                            System.out.println(Thread.currentThread().getName() + ": Consumer1 поток запускает задачу на выполнение, задача: " + task);
-                            task.run();
-                            System.out.println(Thread.currentThread().getName() + ": Consumer1 поток после выполнения метода run");
+                                // получаем очередную задачу из очереди
+                                MyTask task = (MyTask) threadPool.tasks.poll();
+                                System.out.println(Thread.currentThread().getName() + ": Consumer поток пробует запустить задачу на выполнение, задача: " + task);
+                                if (task != null) {
+                                    task.run();
+                                }
+                                System.out.println(Thread.currentThread().getName() + ": Consumer поток после выполнения метода run");
 
-                        } catch (InterruptedException e) {
-                            System.out.println(Thread.currentThread().getName() + ": Consumer1 поток поймал catch");
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
+                            } catch (InterruptedException e) {
+                                System.out.println(Thread.currentThread().getName() + ": Consumer поток поймал catch");
+                                e.printStackTrace();
+                                Thread.currentThread().interrupt();
+                            }
                         }
+                        System.out.println(Thread.currentThread().getName() + ": Consumer поток завершил работу");
                     }
-                }
-        );
+            ));
+        }
 
-        // запускаем 2-й поток потребитель/выполнитель задач
-        final Thread consumer2 = new Thread(
-                () -> {
-                    System.out.println(Thread.currentThread().getName() + ": Consumer2 поток запущен");
-                    while (threadPool.tasks.isFlag() || threadPool.tasks.getQueueSize() > 0) {
-                        try {
-                            System.out.println(Thread.currentThread().getName() + ": Consumer2 пытается извлечь элемент..");
-                            // получаем очередную задачу из очереди
-                            MyTask task = (MyTask) threadPool.tasks.poll();
-                            System.out.println(Thread.currentThread().getName() + ": Consumer2 поток запускает задачу на выполнение, задача: " + task);
-                            task.run();
-                            System.out.println(Thread.currentThread().getName() + ": Consumer2 поток после выполнения метода run");
-                        } catch (InterruptedException e) {
-                            System.out.println(Thread.currentThread().getName() + ": Consumer2 поток поймал catch");
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                }
-        );
+        for (Thread thread : threads) {
+            thread.start();
+        }
 
-        consumer.start();
-        consumer2.start();
         producer.start();
         producer.join();
-        consumer.join();
-        consumer2.join();
+
+        for (Thread thread : threads) {
+            thread.join();
+        }
     }
 }
