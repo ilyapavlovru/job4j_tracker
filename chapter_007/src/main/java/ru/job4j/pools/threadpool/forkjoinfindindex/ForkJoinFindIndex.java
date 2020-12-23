@@ -7,14 +7,14 @@ import java.util.stream.LongStream;
 
 public class ForkJoinFindIndex extends RecursiveTask<Integer> {
 
-    private final long[] numbers;
+    private final User[] users;
     private final int start;
     private final int end;
     private static final long threshold = 25;
-    private final long searchValue;
+    private final String searchValue;
 
-    public ForkJoinFindIndex(long[] numbers, long searchValue, int start, int end) {
-        this.numbers = numbers;
+    public ForkJoinFindIndex(User[] users, String searchValue, int start, int end) {
+        this.users = users;
         this.start = start;
         this.end = end;
         this.searchValue = searchValue;
@@ -28,10 +28,10 @@ public class ForkJoinFindIndex extends RecursiveTask<Integer> {
             return find(searchValue);
         }
 
-        ForkJoinFindIndex firstTask = new ForkJoinFindIndex(numbers, searchValue, start, start + length / 2);
+        ForkJoinFindIndex firstTask = new ForkJoinFindIndex(users, searchValue, start, start + length / 2);
         firstTask.fork();
         
-        ForkJoinFindIndex secondTask = new ForkJoinFindIndex(numbers, searchValue, start + length / 2, end);
+        ForkJoinFindIndex secondTask = new ForkJoinFindIndex(users, searchValue, start + length / 2, end);
 
         Integer secondTaskResult = secondTask.compute();
         Integer firstTaskResult = firstTask.join();
@@ -39,10 +39,10 @@ public class ForkJoinFindIndex extends RecursiveTask<Integer> {
         return firstTaskResult > 0 ? firstTaskResult : secondTaskResult;
     }
 
-    private Integer find(long searchValue) {
+    private Integer find(String searchValue) {
         int result = 0;
         for (int i = start; i < end; i++) {
-            if (numbers[i] == searchValue) {
+            if (users[i].getUserName().equals(searchValue)) {
                 return i;
             }
         }
@@ -52,8 +52,14 @@ public class ForkJoinFindIndex extends RecursiveTask<Integer> {
     public static int startForkJoinFindIndex() {
 //        long[] numbers = LongStream.rangeClosed(1, n).toArray();
         long[] numbers = {1, 2, 9, 2, 5, 4, 7, 4, 6};
-        int searchValue = 9;
-        ForkJoinTask<Integer> task = new ForkJoinFindIndex(numbers, searchValue, 0, numbers.length);
+        User[] users = {
+                new User("Ilya", "ilya@mail.ru"),
+                new User("Petr", "petr@mail.ru"),
+                new User("Matvey", "matvey@mail.ru"),
+                new User("Lena", "lena@mail.ru"),
+        };
+        String searchValue = "Matvey";
+        ForkJoinTask<Integer> task = new ForkJoinFindIndex(users, searchValue, 0, users.length);
         return new ForkJoinPool().invoke(task);
     }
 }
