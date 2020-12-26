@@ -1,4 +1,4 @@
-package ru.job4j.pools.threadpool;
+package ru.job4j.pools.threadpool.customthreadpool;
 
 class MyTask implements Runnable {
 

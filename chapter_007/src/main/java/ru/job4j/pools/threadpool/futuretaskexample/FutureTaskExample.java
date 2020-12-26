@@ -5,7 +5,7 @@
  * Java program do two Future task
  * using Runnable Interface
  */
-package ru.job4j.pools.threadpool;
+package ru.job4j.pools.threadpool.futuretaskexample;
 
 import java.util.concurrent.*;
 import java.util.logging.Level;

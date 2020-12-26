@@ -1,4 +1,4 @@
-package ru.job4j.pools.threadpool;
+package ru.job4j.pools.threadpool.customthreadpool;
 
 import java.util.LinkedList;
 import java.util.List;

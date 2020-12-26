@@ -1,4 +1,4 @@
-package ru.job4j.pools.threadpool;
+package ru.job4j.pools.threadpool.executorservicecustom;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
