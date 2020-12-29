@@ -1,4 +1,4 @@
-package ru.job4j.pools.threadsafesingleton.ver1;
+package ru.job4j.pools.threadpool.threadsafesingleton.ver1;
 
 public enum TrackerSingle {
     INSTSNCE;

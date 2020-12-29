@@ -1,4 +1,4 @@
-package ru.job4j.pools.threadsafesingleton.ver4;
+package ru.job4j.pools.threadpool.threadsafesingleton.ver4;
 
 public class TrackerSingle {
 
