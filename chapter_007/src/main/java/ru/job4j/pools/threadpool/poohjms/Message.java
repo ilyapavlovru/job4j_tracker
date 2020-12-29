@@ -10,6 +10,14 @@ public class Message {
         this.text = text;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getText() {
+        return text;
+    }
+
     @Override
     public String toString() {
         return "Message{" +

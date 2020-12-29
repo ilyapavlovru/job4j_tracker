@@ -43,6 +43,7 @@ public class PoohJms {
 
             System.out.println("Внутри handle");
             String requestParamValue = null;
+            Message getResponseMessage = null;
 
             if ("GET".equals(httpExchange.getRequestMethod())) {
 
@@ -55,10 +56,11 @@ public class PoohJms {
                 if (requestUri.contains("/queue/")) {
 
                     String queueName = requestUri.split("/")[2];
+
                     //new Thread(new Consumer(map, queueName)).start();
 
-                    FutureTask<String> futureTask1 = new FutureTask<>(new Consumer(map, queueName), "FutureTask1 is complete");
-                    threadPoolExecutor.submit(futureTask1);
+                    Callable<Message> callable = new Consumer(map, queueName);
+                    Future<Message> futureTask1 = threadPoolExecutor.submit(callable);
 
                     System.out.println("Finished: " + futureTask1.isDone());
 
@@ -66,17 +68,26 @@ public class PoohJms {
                         try {
                             if (futureTask1.isDone()) {
                                 System.out.println("FutureTask1 Complete");
+                                getResponseMessage = futureTask1.get();
+                                System.out.println("message after FutureTask1 Complete = " + getResponseMessage);
+
+                                // преобразовать объект message в строку json
+//                                messageToJsonString(getResponseMessage);
+
                                 break;
                             }
                         } catch (Exception e) {
                             System.out.println("Exception: " + e);
+                            break;
                         }
                     }
 
 
                     // после прочтения сообщения консумером, т.е. завершения выполнения процесса
                     // мы должны получить результирующий json и напечатать его в ответе на странице
-
+                    System.out.println("at handleGetResponse");
+                    String messageJsonString = messageToJsonString(getResponseMessage);
+                    handleGetResponse(httpExchange, messageJsonString);
                 }
 
             } else if ("POST".equals(httpExchange.getRequestMethod())) {
@@ -110,7 +121,23 @@ public class PoohJms {
             }
 
             System.out.println("at handleResponse");
+
             handleResponse(httpExchange, requestParamValue);
+        }
+
+        private String messageToJsonString(Message message) throws IOException {
+            if (message != null) {
+                String type = message.getType();
+                String text = message.getText();
+
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode node = mapper.valueToTree(message);
+
+                String prettyString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+                System.out.println(prettyString);
+                return prettyString;
+            }
+            return "";
         }
 
         private String handleGetRequest(HttpExchange httpExchange) {
@@ -119,6 +146,15 @@ public class PoohJms {
                     .toString()
                     .split("\\?")[1]
                     .split("=")[1];
+        }
+
+        private void handleGetResponse(HttpExchange httpExchange, String resJson) throws IOException {
+            OutputStream outputStream = httpExchange.getResponseBody();
+            String htmlResponse = resJson;
+            httpExchange.sendResponseHeaders(200, htmlResponse.length());
+            outputStream.write(htmlResponse.getBytes());
+            outputStream.flush();
+            outputStream.close();
         }
 
         private void handleResponse(HttpExchange httpExchange, String requestParamValue) throws IOException {
