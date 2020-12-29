@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +19,7 @@ public class PoohJms {
     private ExecutorService pool;
     private String mode;
     BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
+    ConcurrentHashMap<String, BlockingQueue<Message>> map = new ConcurrentHashMap<>();
 
     public PoohJms(String mode) throws IOException, InterruptedException {
 
@@ -25,7 +27,7 @@ public class PoohJms {
 
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-        server.createContext("/test", new PoohJms.PoohJmsHttpHandler());
+        server.createContext("/queue", new PoohJms.PoohJmsHttpHandler());
         server.setExecutor(threadPoolExecutor);
         server.start();
         System.out.println("Server started on port 8001");
@@ -45,13 +47,18 @@ public class PoohJms {
             if ("GET".equals(httpExchange.getRequestMethod())) {
 
                 System.out.println("Внутри GET обработчика");
-                requestParamValue = handleGetRequest(httpExchange);
-                System.out.println("requestParamValue = " + requestParamValue);
+//                requestParamValue = handleGetRequest(httpExchange);
+//                System.out.println("requestParamValue = " + requestParamValue);
 
                 String requestUri = httpExchange.getRequestURI().toString();
                 // проверка что get запрос в режиме Queue
                 if (requestUri.contains("/queue/")) {
-                    System.out.println("lastIndexOf = " + requestUri.lastIndexOf("/queue/", 0));
+
+                    String queueName = requestUri.split("/")[2];
+
+                    // получили имя очереди, например, weather
+                    // что теперь нужно сделать
+                    //
                 }
 
                 // получатель читает сообщение и удаляет его из очереди
@@ -79,7 +86,7 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    new Thread(new Producer(queue, message)).start();
+                    new Thread(new Producer(map, message)).start();
 
                 }
 
