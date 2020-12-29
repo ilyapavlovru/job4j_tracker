@@ -6,7 +6,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Producer implements Runnable {
 
-    ConcurrentHashMap<String, BlockingQueue<Message>> map = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, BlockingQueue<Message>> map;
     private final Message message;
 
     public Producer(ConcurrentHashMap<String, BlockingQueue<Message>> map, Message message) {
@@ -33,7 +33,7 @@ public class Producer implements Runnable {
             try {
                 // добавляем новое сообщение в эту очередь
                 queue.put(this.message);
-                System.out.println("[Producer] Queue remainingCapacity : " + queue.remainingCapacity());
+                System.out.println("[Producer] Queue name = " + message.type + ", remainingCapacity : " + queue.remainingCapacity());
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -48,7 +48,7 @@ public class Producer implements Runnable {
             try {
                 // добавляем первое сообщение в эту новую очередь
                 queue.put(this.message);
-                System.out.println("[Producer] New queue created, remainingCapacity : " + queue.remainingCapacity());
+                System.out.println("[Producer] New queue created, name = " + message.type + ", remainingCapacity : " + queue.remainingCapacity());
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();

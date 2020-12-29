@@ -16,7 +16,7 @@ import java.util.concurrent.*;
 
 public class PoohJms {
 
-    private ExecutorService pool;
+    private ThreadPoolExecutor threadPoolExecutor;
     private String mode;
     BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
     ConcurrentHashMap<String, BlockingQueue<Message>> map = new ConcurrentHashMap<>();
@@ -26,12 +26,12 @@ public class PoohJms {
         this.mode = mode;
 
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
-        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.createContext("/queue", new PoohJms.PoohJmsHttpHandler());
-        server.setExecutor(threadPoolExecutor);
+        server.setExecutor(this.threadPoolExecutor);
         server.start();
         System.out.println("Server started on port 8001");
-        threadPoolExecutor.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+        this.threadPoolExecutor.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
     }
 
     private class PoohJmsHttpHandler implements HttpHandler {
@@ -55,13 +55,29 @@ public class PoohJms {
                 if (requestUri.contains("/queue/")) {
 
                     String queueName = requestUri.split("/")[2];
+                    //new Thread(new Consumer(map, queueName)).start();
 
-                    // получили имя очереди, например, weather
-                    // что теперь нужно сделать
-                    //
+                    FutureTask<String> futureTask1 = new FutureTask<>(new Consumer(map, queueName), "FutureTask1 is complete");
+                    threadPoolExecutor.submit(futureTask1);
+
+                    System.out.println("Finished: " + futureTask1.isDone());
+
+                    while (true) {
+                        try {
+                            if (futureTask1.isDone()) {
+                                System.out.println("FutureTask1 Complete");
+                                break;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Exception: " + e);
+                        }
+                    }
+
+
+                    // после прочтения сообщения консумером, т.е. завершения выполнения процесса
+                    // мы должны получить результирующий json и напечатать его в ответе на странице
+
                 }
-
-                // получатель читает сообщение и удаляет его из очереди
 
             } else if ("POST".equals(httpExchange.getRequestMethod())) {
 
@@ -93,6 +109,7 @@ public class PoohJms {
 
             }
 
+            System.out.println("at handleResponse");
             handleResponse(httpExchange, requestParamValue);
         }
 
