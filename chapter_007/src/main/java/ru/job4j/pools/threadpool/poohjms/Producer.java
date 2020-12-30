@@ -28,12 +28,12 @@ public class Producer implements Runnable {
         System.out.println("[Producer] Put : " + message);
 
         // если очередь с таким именем существует
-        map.computeIfPresent(message.type, (key, val) -> {
-            BlockingQueue<Message> queue = map.get(message.type);
+        map.computeIfPresent(message.topic, (key, val) -> {
+            BlockingQueue<Message> queue = map.get(message.topic);
             try {
                 // добавляем новое сообщение в эту очередь
                 queue.put(this.message);
-                System.out.println("[Producer] Queue name = " + message.type + ", remainingCapacity : " + queue.remainingCapacity());
+                System.out.println("[Producer] Queue name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -43,12 +43,12 @@ public class Producer implements Runnable {
 
 
         // если очереди с таким именем еще нет, то нужно создать новую очередь
-        map.computeIfAbsent(message.type, key -> {
+        map.computeIfAbsent(message.topic, key -> {
             BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
             try {
                 // добавляем первое сообщение в эту новую очередь
                 queue.put(this.message);
-                System.out.println("[Producer] New queue created, name = " + message.type + ", remainingCapacity : " + queue.remainingCapacity());
+                System.out.println("[Producer] New queue created, name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();

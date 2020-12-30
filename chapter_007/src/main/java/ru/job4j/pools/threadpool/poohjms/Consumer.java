@@ -8,11 +8,11 @@ public class Consumer implements Callable<Message> {
 
     //todo final?
     ConcurrentHashMap<String, BlockingQueue<Message>> map ;
-    private final String queueName;
+    private final String topicName;
 
-    public Consumer(ConcurrentHashMap<String, BlockingQueue<Message>> map, String queueName) {
+    public Consumer(ConcurrentHashMap<String, BlockingQueue<Message>> map, String topicName) {
         this.map = map;
-        this.queueName = queueName;
+        this.topicName = topicName;
     }
 
     @Override
@@ -28,14 +28,14 @@ public class Consumer implements Callable<Message> {
 
     private Message process() throws InterruptedException {
 
-        // получаем очередь по имени очереди
-        System.out.println("получаем очередь по имени очереди");
-        BlockingQueue<Message> queue = map.get(queueName);
+        // получаем очередь по имени топика
+        System.out.println("получаем очередь по имени топика");
+        BlockingQueue<Message> queue = map.get(topicName);
 
         // извлекаем первое сообщение из очереди
         Message message = queue.poll();
         System.out.println("message = " + message);
-        System.out.println("[Consumer] Queue name = " + queueName + ", remainingCapacity : " + queue.remainingCapacity());
+        System.out.println("[Consumer] Queue name = " + topicName + ", remainingCapacity : " + queue.remainingCapacity());
         Thread.sleep(500);
         return message;
     }

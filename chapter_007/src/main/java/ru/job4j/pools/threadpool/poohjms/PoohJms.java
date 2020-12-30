@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpServer;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +26,7 @@ public class PoohJms {
 
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-        server.createContext("/queue", new PoohJms.PoohJmsHttpHandler());
+        server.createContext("/topic", new PoohJms.PoohJmsHttpHandler());
         server.setExecutor(this.threadPoolExecutor);
         server.start();
         System.out.println("Server started on port 8001");
@@ -52,14 +51,11 @@ public class PoohJms {
 //                System.out.println("requestParamValue = " + requestParamValue);
 
                 String requestUri = httpExchange.getRequestURI().toString();
-                // проверка что get запрос в режиме Queue
-                if (requestUri.contains("/queue/")) {
+                // проверка что get запрос в режиме Topic
+                if (requestUri.contains("/topic/")) {
 
-                    String queueName = requestUri.split("/")[2];
-
-                    //new Thread(new Consumer(map, queueName)).start();
-
-                    Callable<Message> callable = new Consumer(map, queueName);
+                    String topicName = requestUri.split("/")[2];
+                    Callable<Message> callable = new Consumer(map, topicName);
                     Future<Message> futureTask1 = threadPoolExecutor.submit(callable);
 
                     System.out.println("Finished: " + futureTask1.isDone());
@@ -107,9 +103,9 @@ public class PoohJms {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode jsonNode = mapper.readTree(msg);
 
-                if (MsgHelper.isQueueMessage(jsonNode)) {
+                if (MsgHelper.isTopicMessage(jsonNode)) {
 
-                    String type = jsonNode.get("queue").asText();
+                    String type = jsonNode.get("topic").asText();
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
@@ -127,7 +123,7 @@ public class PoohJms {
 
         private String messageToJsonString(Message message) throws IOException {
             if (message != null) {
-                String type = message.getType();
+                String type = message.getTopic();
                 String text = message.getText();
 
                 ObjectMapper mapper = new ObjectMapper();
