@@ -47,9 +47,6 @@ public class PoohJms {
             if ("GET".equals(httpExchange.getRequestMethod())) {
 
                 System.out.println("Внутри GET обработчика");
-//                requestParamValue = handleGetRequest(httpExchange);
-//                System.out.println("requestParamValue = " + requestParamValue);
-
                 String requestUri = httpExchange.getRequestURI().toString();
                 // проверка что get запрос в режиме Topic
                 if (requestUri.contains("/topic/")) {
@@ -66,10 +63,6 @@ public class PoohJms {
                                 System.out.println("FutureTask1 Complete");
                                 getResponseMessage = futureTask1.get();
                                 System.out.println("message after FutureTask1 Complete = " + getResponseMessage);
-
-                                // преобразовать объект message в строку json
-//                                messageToJsonString(getResponseMessage);
-
                                 break;
                             }
                         } catch (Exception e) {
@@ -78,26 +71,17 @@ public class PoohJms {
                         }
                     }
 
-
                     // после прочтения сообщения консумером, т.е. завершения выполнения процесса
                     // мы должны получить результирующий json и напечатать его в ответе на странице
                     System.out.println("at handleGetResponse");
                     String messageJsonString = messageToJsonString(getResponseMessage);
-                    handleGetResponse(httpExchange, messageJsonString);
+                    handleResponse(httpExchange, messageJsonString);
                 }
 
             } else if ("POST".equals(httpExchange.getRequestMethod())) {
 
                 System.out.println("Внутри POST обработчика");
-
-                StringBuilder sb = new StringBuilder();
-                InputStream ios = httpExchange.getRequestBody();
-                int i;
-                while ((i = ios.read()) != -1) {
-                    sb.append((char) i);
-                }
-//                System.out.println("hm: " + sb.toString());
-                String msg = sb.toString();
+                String msg = inputStreamToString(httpExchange.getRequestBody());
                 System.out.println(msg);
 
                 ObjectMapper mapper = new ObjectMapper();
@@ -113,12 +97,19 @@ public class PoohJms {
 
                 }
 
+                System.out.println("at handleResponse");
 
+                handleResponse(httpExchange, "");
             }
+        }
 
-            System.out.println("at handleResponse");
-
-            handleResponse(httpExchange, requestParamValue);
+        private String inputStreamToString(InputStream ios) throws IOException {
+            StringBuilder sb = new StringBuilder();
+            int i;
+            while ((i = ios.read()) != -1) {
+                sb.append((char) i);
+            }
+            return sb.toString();
         }
 
         private String messageToJsonString(Message message) throws IOException {
@@ -144,7 +135,7 @@ public class PoohJms {
                     .split("=")[1];
         }
 
-        private void handleGetResponse(HttpExchange httpExchange, String resJson) throws IOException {
+        private void handleResponse(HttpExchange httpExchange, String resJson) throws IOException {
             OutputStream outputStream = httpExchange.getResponseBody();
             String htmlResponse = resJson;
             httpExchange.sendResponseHeaders(200, htmlResponse.length());
@@ -152,31 +143,6 @@ public class PoohJms {
             outputStream.flush();
             outputStream.close();
         }
-
-        private void handleResponse(HttpExchange httpExchange, String requestParamValue) throws IOException {
-            OutputStream outputStream = httpExchange.getResponseBody();
-            StringBuilder htmlBuilder = new StringBuilder();
-
-            htmlBuilder.append("").
-                    append("").
-                    append("<h1>").
-                    append("Hello ")
-                    .append(requestParamValue)
-                    .append("</h1>")
-                    .append("")
-                    .append("");
-
-            // encode HTML content
-            String htmlResponse = htmlBuilder.toString();
-
-            // this line is a must
-            httpExchange.sendResponseHeaders(200, htmlResponse.length());
-
-            outputStream.write(htmlResponse.getBytes());
-            outputStream.flush();
-            outputStream.close();
-        }
-
     }
 }
 
