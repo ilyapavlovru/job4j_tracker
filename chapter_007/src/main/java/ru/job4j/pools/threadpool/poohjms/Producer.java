@@ -1,10 +1,11 @@
 package ru.job4j.pools.threadpool.poohjms;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Producer implements Runnable {
+public class Producer implements Callable<Message> {
 
     ConcurrentHashMap<String, BlockingQueue<Message>> map;
     private final Message message;
@@ -15,47 +16,56 @@ public class Producer implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Message call() throws Exception {
+        Message message = null;
         try {
-            process();
+            message = process();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        return message;
     }
 
-    private void process() throws InterruptedException {
+    private Message process() throws InterruptedException {
 
         System.out.println("[Producer] Put : " + message);
 
-        // если очередь с таким именем существует
-        map.computeIfPresent(message.topic, (key, val) -> {
-            BlockingQueue<Message> queue = map.get(message.topic);
-            try {
-                // добавляем новое сообщение в эту очередь
-                queue.put(this.message);
-                System.out.println("[Producer] Queue name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return queue;
-        });
+        try {
+            // если очередь с таким именем существует
+            map.computeIfPresent(message.topic, (key, val) -> {
+                BlockingQueue<Message> queue = map.get(message.topic);
+                try {
+                    // добавляем новое сообщение в эту очередь
+                    queue.put(this.message);
+                    System.out.println("[Producer] Queue name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return queue;
+            });
 
 
-        // если очереди с таким именем еще нет, то нужно создать новую очередь
-        map.computeIfAbsent(message.topic, key -> {
-            BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
-            try {
-                // добавляем первое сообщение в эту новую очередь
-                queue.put(this.message);
-                System.out.println("[Producer] New queue created, name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return queue;
-        });
+            // если очереди с таким именем еще нет, то нужно создать новую очередь
+            map.computeIfAbsent(message.topic, key -> {
+                BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
+                try {
+                    // добавляем первое сообщение в эту новую очередь
+                    queue.put(this.message);
+                    System.out.println("[Producer] New queue created, name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return queue;
+            });
 
-        System.out.println("*********************************************");
+            System.out.println("*********************************************");
+            return message;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

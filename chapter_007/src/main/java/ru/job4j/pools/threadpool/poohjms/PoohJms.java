@@ -42,7 +42,7 @@ public class PoohJms {
 
             System.out.println("Внутри handle");
             String requestParamValue = null;
-            Message getResponseMessage = null;
+            Message responseMessage = null;
 
             if ("GET".equals(httpExchange.getRequestMethod())) {
 
@@ -53,28 +53,16 @@ public class PoohJms {
 
                     String topicName = requestUri.split("/")[2];
                     Callable<Message> callable = new Consumer(map, topicName);
-                    Future<Message> futureTask1 = threadPoolExecutor.submit(callable);
+                    Future<Message> futureTask = threadPoolExecutor.submit(callable);
 
-                    System.out.println("Finished: " + futureTask1.isDone());
+                    System.out.println("Finished: " + futureTask.isDone());
 
-                    while (true) {
-                        try {
-                            if (futureTask1.isDone()) {
-                                System.out.println("FutureTask1 Complete");
-                                getResponseMessage = futureTask1.get();
-                                System.out.println("message after FutureTask1 Complete = " + getResponseMessage);
-                                break;
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Exception: " + e);
-                            break;
-                        }
-                    }
+                    responseMessage = getFutureTaskResponse(futureTask);
 
                     // после прочтения сообщения консумером, т.е. завершения выполнения процесса
                     // мы должны получить результирующий json и напечатать его в ответе на странице
                     System.out.println("at handleGetResponse");
-                    String messageJsonString = messageToJsonString(getResponseMessage);
+                    String messageJsonString = messageToJsonString(responseMessage);
                     handleResponse(httpExchange, messageJsonString);
                 }
 
@@ -93,13 +81,18 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    new Thread(new Producer(map, message)).start();
+                    //new Thread(new Producer(map, message)).start();
 
+                    Callable<Message> callable = new Producer(map, message);
+                    Future<Message> futureTask = threadPoolExecutor.submit(callable);
+
+                    System.out.println("Finished: " + futureTask.isDone());
+                    responseMessage = getFutureTaskResponse(futureTask);
                 }
 
                 System.out.println("at handleResponse");
-
-                handleResponse(httpExchange, "");
+                String messageJsonString = messageToJsonString(responseMessage);
+                handleResponse(httpExchange, messageJsonString);
             }
         }
 
@@ -142,6 +135,23 @@ public class PoohJms {
             outputStream.write(htmlResponse.getBytes());
             outputStream.flush();
             outputStream.close();
+        }
+    }
+
+    private Message getFutureTaskResponse(Future<Message> futureTask) {
+        while (true) {
+            System.out.println("waiting..........");
+            try {
+                if (futureTask.isDone()) {
+                    System.out.println("FutureTask1 Complete");
+                    Message getResponseMessage = futureTask.get();
+                    System.out.println("message after FutureTask1 Complete = " + getResponseMessage);
+                    return getResponseMessage;
+                }
+            } catch (Exception e) {
+                System.out.println("Exception: " + e);
+                return null;
+            }
         }
     }
 }
