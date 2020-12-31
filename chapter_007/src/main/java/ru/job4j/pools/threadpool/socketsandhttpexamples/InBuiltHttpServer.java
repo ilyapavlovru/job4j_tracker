@@ -13,6 +13,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * https://dzone.com/articles/simple-http-server-in-java
+ * https://dev-gang.ru/article/prostoi-http-server-na-java-8mjy9xrxmt/
+ */
+
 public class InBuiltHttpServer {
     public static void main(String[] args) throws InterruptedException, IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
