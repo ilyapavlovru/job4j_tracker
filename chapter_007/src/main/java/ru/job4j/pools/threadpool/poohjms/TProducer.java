@@ -5,18 +5,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Producer implements Callable<Message> {
+public class TProducer implements Callable<Message> {
 
-    ConcurrentHashMap<String, BlockingQueue<Message>> map;
+    private final ConcurrentHashMap<String, BlockingQueue<Message>> map;
     private final Message message;
 
-    public Producer(ConcurrentHashMap<String, BlockingQueue<Message>> map, Message message) {
+    public TProducer(ConcurrentHashMap<String, BlockingQueue<Message>> map, Message message) {
         this.map = map;
         this.message = message;
     }
 
     @Override
-    public Message call() throws Exception {
+    public Message call() {
         Message message = null;
         try {
             message = process();
@@ -32,12 +32,12 @@ public class Producer implements Callable<Message> {
 
         try {
             // если очередь с таким именем существует
-            map.computeIfPresent(message.topic, (key, val) -> {
-                BlockingQueue<Message> queue = map.get(message.topic);
+            map.computeIfPresent(message.getTopic(), (key, val) -> {
+                BlockingQueue<Message> queue = map.get(message.getTopic());
                 try {
                     // добавляем новое сообщение в эту очередь
                     queue.put(this.message);
-                    System.out.println("[Producer] Queue name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
+                    System.out.println("[Producer] Queue name = " + message.getText() + ", remainingCapacity : " + queue.remainingCapacity());
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -45,14 +45,13 @@ public class Producer implements Callable<Message> {
                 return queue;
             });
 
-
             // если очереди с таким именем еще нет, то нужно создать новую очередь
-            map.computeIfAbsent(message.topic, key -> {
+            map.computeIfAbsent(message.getTopic(), key -> {
                 BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
                 try {
                     // добавляем первое сообщение в эту новую очередь
                     queue.put(this.message);
-                    System.out.println("[Producer] New queue created, name = " + message.topic + ", remainingCapacity : " + queue.remainingCapacity());
+                    System.out.println("[Producer] New queue created, name = " + message.getTopic() + ", remainingCapacity : " + queue.remainingCapacity());
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

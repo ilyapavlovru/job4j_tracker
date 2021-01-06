@@ -15,15 +15,11 @@ import java.util.concurrent.*;
 
 public class PoohJms {
 
-    private ThreadPoolExecutor threadPoolExecutor;
-    private String mode;
-    BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
-    ConcurrentHashMap<String, BlockingQueue<Message>> map = new ConcurrentHashMap<>();
+    private final ThreadPoolExecutor threadPoolExecutor;
+    private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
+    private final ConcurrentHashMap<String, BlockingQueue<Message>> map = new ConcurrentHashMap<>();
 
     public PoohJms(String mode) throws IOException, InterruptedException {
-
-        this.mode = mode;
-
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.createContext("/" + mode, new PoohJms.PoohJmsHttpHandler());
@@ -41,7 +37,6 @@ public class PoohJms {
             System.out.println("getRequestURI = " + httpExchange.getRequestURI());
 
             System.out.println("Внутри handle");
-            String requestParamValue = null;
             Message responseMessage = null;
 
             if ("GET".equals(httpExchange.getRequestMethod())) {
@@ -53,7 +48,7 @@ public class PoohJms {
                 if (requestUri.contains("/topic/")) {
 
                     String topicName = requestUri.split("/")[2];
-                    Callable<Message> callable = new Consumer(map, topicName);
+                    Callable<Message> callable = new TConsumer(map, topicName);
                     Future<Message> futureTask = threadPoolExecutor.submit(callable);
 
                     System.out.println("Finished: " + futureTask.isDone());
@@ -65,8 +60,6 @@ public class PoohJms {
                 // проверка что get запрос в режиме Queue
                 if (requestUri.contains("/queue/")) {
 
-                    // читаем имя очереди из url запроса
-                    String queueName = requestUri.split("/")[2];
                     Callable<Message> callable = new QConsumer(queue);
                     Future<Message> futureTask = threadPoolExecutor.submit(callable);
 
@@ -96,7 +89,7 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    Callable<Message> callable = new Producer(map, message);
+                    Callable<Message> callable = new TProducer(map, message);
                     Future<Message> futureTask = threadPoolExecutor.submit(callable);
 
                     System.out.println("Finished: " + futureTask.isDone());
@@ -134,8 +127,6 @@ public class PoohJms {
 
         private String messageToJsonString(Message message) throws IOException {
             if (message != null) {
-                String type = message.getTopic();
-                String text = message.getText();
 
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode node = mapper.valueToTree(message);
@@ -147,19 +138,10 @@ public class PoohJms {
             return "";
         }
 
-        private String handleGetRequest(HttpExchange httpExchange) {
-            return httpExchange.
-                    getRequestURI()
-                    .toString()
-                    .split("\\?")[1]
-                    .split("=")[1];
-        }
-
         private void handleResponse(HttpExchange httpExchange, String resJson) throws IOException {
             OutputStream outputStream = httpExchange.getResponseBody();
-            String htmlResponse = resJson;
-            httpExchange.sendResponseHeaders(200, htmlResponse.length());
-            outputStream.write(htmlResponse.getBytes());
+            httpExchange.sendResponseHeaders(200, resJson.length());
+            outputStream.write(resJson.getBytes());
             outputStream.flush();
             outputStream.close();
         }

@@ -5,8 +5,7 @@ import java.util.concurrent.Callable;
 
 public class QProducer implements Callable<Message> {
 
-    BlockingQueue<Message> queue;
-
+    private final BlockingQueue<Message> queue;
     private final Message message;
 
     public QProducer(BlockingQueue<Message> queue, Message message) {
@@ -15,7 +14,7 @@ public class QProducer implements Callable<Message> {
     }
 
     @Override
-    public Message call() throws Exception {
+    public Message call() {
         Message message = null;
         try {
             message = process();
@@ -27,9 +26,14 @@ public class QProducer implements Callable<Message> {
 
     private Message process() throws InterruptedException {
         System.out.println("[Producer] Put : " + message);
-        queue.put(this.message);
-        System.out.println("[Producer] Queue remainingCapacity : " + queue.remainingCapacity());
-        Thread.sleep(100);
-        return this.message;
+        try {
+            queue.put(this.message);
+            System.out.println("[Producer] Queue remainingCapacity : " + queue.remainingCapacity());
+            Thread.sleep(100);
+            return this.message;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

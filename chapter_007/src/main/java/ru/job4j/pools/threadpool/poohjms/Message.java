@@ -2,8 +2,8 @@ package ru.job4j.pools.threadpool.poohjms;
 
 public class Message {
 
-    String topic;
-    String text;
+    private String topic;
+    private String text;
 
     public Message(String name, String text) {
         this.topic = name;
