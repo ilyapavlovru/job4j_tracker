@@ -27,17 +27,13 @@ public class TProducer implements Callable<Message> {
     }
 
     private Message process() throws InterruptedException {
-
-        System.out.println("[Producer] Put : " + message);
-
         try {
             // если очередь с таким именем существует
-            map.computeIfPresent(message.getTopic(), (key, val) -> {
-                BlockingQueue<Message> queue = map.get(message.getTopic());
+            map.computeIfPresent(message.getName(), (key, val) -> {
+                BlockingQueue<Message> queue = map.get(message.getName());
                 try {
                     // добавляем новое сообщение в эту очередь
                     queue.put(this.message);
-                    System.out.println("[Producer] Queue name = " + message.getText() + ", remainingCapacity : " + queue.remainingCapacity());
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -46,20 +42,17 @@ public class TProducer implements Callable<Message> {
             });
 
             // если очереди с таким именем еще нет, то нужно создать новую очередь
-            map.computeIfAbsent(message.getTopic(), key -> {
+            map.computeIfAbsent(message.getName(), key -> {
                 BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
                 try {
                     // добавляем первое сообщение в эту новую очередь
                     queue.put(this.message);
-                    System.out.println("[Producer] New queue created, name = " + message.getTopic() + ", remainingCapacity : " + queue.remainingCapacity());
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 return queue;
             });
-
-            System.out.println("*********************************************");
             return message;
 
         } catch (Exception e) {

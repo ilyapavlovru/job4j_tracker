@@ -26,16 +26,10 @@ public class TConsumer implements Callable<Message> {
     }
 
     private Message process() throws InterruptedException {
-
-        // получаем очередь по имени топика
-        System.out.println("получаем очередь по имени топика");
-
         try {
             BlockingQueue<Message> queue = map.get(topicName);
             // извлекаем первое сообщение из очереди
             Message message = queue.poll();
-            System.out.println("message = " + message);
-            System.out.println("[Consumer] Queue name = " + topicName + ", remainingCapacity : " + queue.remainingCapacity());
             Thread.sleep(500);
             return message;
         } catch (Exception e) {

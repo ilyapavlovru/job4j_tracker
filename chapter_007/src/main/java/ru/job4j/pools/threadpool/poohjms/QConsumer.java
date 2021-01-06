@@ -24,10 +24,7 @@ public class QConsumer implements Callable<Message> {
 
     private Message process() throws InterruptedException {
         try {
-            // извлекаем первое сообщение из очереди
             Message message = queue.poll();
-            System.out.println("message = " + message);
-            System.out.println("[Consumer] Poll, remainingCapacity : " + queue.remainingCapacity());
             Thread.sleep(500);
             return message;
         } catch (Exception e) {

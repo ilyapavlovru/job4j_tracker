@@ -25,10 +25,8 @@ public class QProducer implements Callable<Message> {
     }
 
     private Message process() throws InterruptedException {
-        System.out.println("[Producer] Put : " + message);
         try {
             queue.put(this.message);
-            System.out.println("[Producer] Queue remainingCapacity : " + queue.remainingCapacity());
             Thread.sleep(100);
             return this.message;
         } catch (Exception e) {
