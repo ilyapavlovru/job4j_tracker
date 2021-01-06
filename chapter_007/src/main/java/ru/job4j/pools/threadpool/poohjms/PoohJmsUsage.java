@@ -9,15 +9,5 @@ public class PoohJmsUsage {
         // тестирование сервиса в режиме topic
         PoohJms poohJms = new PoohJms("topic");
 
-
-
-//
-//        JsonMessage jsonMessage = "{
-//                "queue" : "weather",
-//                "text" : "temperature +18 C"}";
-//
-//
-//        // отправитель отправляет сообщение
-//        poohJms.sendMessage(jsonMessage);
     }
 }

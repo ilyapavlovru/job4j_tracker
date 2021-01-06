@@ -26,7 +26,7 @@ public class PoohJms {
 
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-        server.createContext("/topic", new PoohJms.PoohJmsHttpHandler());
+        server.createContext("/" + mode, new PoohJms.PoohJmsHttpHandler());
         server.setExecutor(this.threadPoolExecutor);
         server.start();
         System.out.println("Server started on port 8001");
@@ -48,6 +48,7 @@ public class PoohJms {
 
                 System.out.println("Внутри GET обработчика");
                 String requestUri = httpExchange.getRequestURI().toString();
+
                 // проверка что get запрос в режиме Topic
                 if (requestUri.contains("/topic/")) {
 
@@ -58,13 +59,27 @@ public class PoohJms {
                     System.out.println("Finished: " + futureTask.isDone());
 
                     responseMessage = getFutureTaskResponse(futureTask);
-
-                    // после прочтения сообщения консумером, т.е. завершения выполнения процесса
-                    // мы должны получить результирующий json и напечатать его в ответе на странице
-                    System.out.println("at handleGetResponse");
-                    String messageJsonString = messageToJsonString(responseMessage);
-                    handleResponse(httpExchange, messageJsonString);
                 }
+
+
+                // проверка что get запрос в режиме Queue
+                if (requestUri.contains("/queue/")) {
+
+                    // читаем имя очереди из url запроса
+                    String queueName = requestUri.split("/")[2];
+                    Callable<Message> callable = new QConsumer(queue);
+                    Future<Message> futureTask = threadPoolExecutor.submit(callable);
+
+                    System.out.println("Finished: " + futureTask.isDone());
+
+                    responseMessage = getFutureTaskResponse(futureTask);
+                }
+
+                // после прочтения сообщения консумером, т.е. завершения выполнения процесса
+                // мы должны получить результирующий json и напечатать его в ответе на странице
+                System.out.println("at handleGetResponse");
+                String messageJsonString = messageToJsonString(responseMessage);
+                handleResponse(httpExchange, messageJsonString);
 
             } else if ("POST".equals(httpExchange.getRequestMethod())) {
 
@@ -81,14 +96,26 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    //new Thread(new Producer(map, message)).start();
-
                     Callable<Message> callable = new Producer(map, message);
                     Future<Message> futureTask = threadPoolExecutor.submit(callable);
 
                     System.out.println("Finished: " + futureTask.isDone());
                     responseMessage = getFutureTaskResponse(futureTask);
                 }
+
+                if (MsgHelper.isQueueMessage(jsonNode)) {
+
+                    String type = jsonNode.get("queue").asText();
+                    String text = jsonNode.get("text").asText();
+                    Message message = new Message(type, text);
+
+                    Callable<Message> callable = new QProducer(queue, message);
+                    Future<Message> futureTask = threadPoolExecutor.submit(callable);
+
+                    System.out.println("Finished: " + futureTask.isDone());
+                    responseMessage = getFutureTaskResponse(futureTask);
+                }
+
 
                 System.out.println("at handleResponse");
                 String messageJsonString = messageToJsonString(responseMessage);
@@ -140,7 +167,7 @@ public class PoohJms {
 
     private Message getFutureTaskResponse(Future<Message> futureTask) {
         while (true) {
-            System.out.println("waiting..........");
+            //System.out.println("waiting..........");
             try {
                 if (futureTask.isDone()) {
                     System.out.println("FutureTask1 Complete");
