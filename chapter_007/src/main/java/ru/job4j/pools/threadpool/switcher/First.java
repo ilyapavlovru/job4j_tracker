@@ -2,7 +2,7 @@ package ru.job4j.pools.threadpool.switcher;
 
 public class First implements Runnable{
 
-    MasterSlaveBarrier masterSlaveBarrier;
+    private final MasterSlaveBarrier masterSlaveBarrier;
 
     First(MasterSlaveBarrier masterSlaveBarrier){
         this.masterSlaveBarrier = masterSlaveBarrier;
