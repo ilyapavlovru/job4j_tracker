@@ -1,5 +1,6 @@
 package ru.job4j.pools.threadpool.poohjms;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
+import java.util.List;
 import java.util.concurrent.*;
 
 public class PoohJms {
@@ -18,15 +20,16 @@ public class PoohJms {
     private final ThreadPoolExecutor threadPoolExecutor;
     private BlockingQueue<Message> queue;
     private TopicPooh topicPooh;
+    private PubSubTopic pubSubTopic;
 
     public PoohJms(String mode) throws IOException, InterruptedException {
-        HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress("192.168.90.139", 8001), 0);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.createContext("/" + mode, new PoohJms.PoohJmsHttpHandler());
         if (mode.equals("queue")) {
-            queue = new LinkedBlockingQueue<>(10);
-        } else if (mode.equals("topic")) {
             topicPooh = new TopicPooh();
+        } else if (mode.equals("topic")) {
+            pubSubTopic = new PubSubTopic();
         }
         server.setExecutor(this.threadPoolExecutor);
         server.start();
@@ -36,6 +39,13 @@ public class PoohJms {
     private class PoohJmsHttpHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
+
+            Headers requestHeaders =  httpExchange.getRequestHeaders();
+            requestHeaders.entrySet().forEach(System.out :: println);
+            String clientUserAgent = requestHeaders.get("userKey").get(0);
+            System.out.println(clientUserAgent);
+
+
             Message responseMessage = null;
             if ("GET".equals(httpExchange.getRequestMethod())) {
                 String requestUri = httpExchange.getRequestURI().toString();
@@ -60,7 +70,8 @@ public class PoohJms {
                     String type = jsonNode.get("topic").asText();
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
-                    responseMessage = topicPooh.add(message);
+
+                    responseMessage = pubSubTopic.add(clientUserAgent, message);
                 }
                 if (MsgHelper.isQueueMessage(jsonNode)) {
                     String type = jsonNode.get("queue").asText();
