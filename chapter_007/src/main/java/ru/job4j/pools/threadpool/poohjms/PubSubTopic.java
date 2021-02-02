@@ -13,44 +13,55 @@ public class PubSubTopic {
         this.map = new ConcurrentHashMap<>();
     }
 
-    public Message add(String clientUserAgent, Message message) {
+    // подписка консумера на топик или чтение сообщения
+    public Message take(String clientUserAgent, String topicName) {
 
         // идентифицируем клиента: новый или старый
-        ConcurrentHashMap<String, BlockingQueue<Message>> oldClientMap = map.get(clientUserAgent);
+        ConcurrentHashMap<String, BlockingQueue<Message>> oldConsumerMap = map.get(clientUserAgent);
 
         // если ключа с таким клиентом нет (новый клиент)
-        if (oldClientMap == null) {
+        if (oldConsumerMap == null) {
 
-            // добавляем клиенту новый топик и новую пустую очередь
-            subscribeClientToMessageTopic(clientUserAgent, message);
-
-            // также, всем клиентам, у которых есть этот топик, в очередь добавляется новое сообщение
-            addMessageToAllTopicSubscribers(message);
+            // подписка консумера на топик
+            subscribeClientToMessageTopic(clientUserAgent, topicName);
 
             // старый клиент
         } else {
-            // если топик сообщения уже есть, то сообщение добавляется в очередь данного топика
-            BlockingQueue<Message> clientTopicQueue = oldClientMap.get(message.getName());
-            if (clientTopicQueue != null) {
-                clientTopicQueue.add(message);
-            } else {
-                // добавляем клиенту новый топик и новую пустую очередь
-                subscribeClientToMessageTopic(clientUserAgent, message);
-            }
 
-            // также, всем клиентам, у которых есть этот топик, в очередь добавляется новое сообщение
-            addMessageToAllTopicSubscribers(message);
+            // если у консумера такой топик уже есть, то читаем сообщение из очереди и удаляем сообщение
+            BlockingQueue<Message> consumerTopicQueue = oldConsumerMap.get(topicName);
+            if (consumerTopicQueue != null) {
+                return consumerTopicQueue.poll();
+            } else {
+                // подписка консумера на топик
+                subscribeClientToMessageTopic(clientUserAgent, topicName);
+            }
         }
+        return null;
+    }
+
+    // рассылка сообщения всем подписчикам топика
+    public Message add(Message message) {
+
+        // всем клиентам, у которых есть этот топик, в очередь добавляется новое сообщение
+        addMessageToAllTopicSubscribers(message);
 
         return message;
     }
 
     // подписка клиента на топик
-    private void subscribeClientToMessageTopic(String clientUserAgent, Message message) {
-        ConcurrentHashMap<String, BlockingQueue<Message>> newTopicMap = new ConcurrentHashMap<>();
-        BlockingQueue<Message> newQueue = new LinkedBlockingQueue<>(10);
-        newTopicMap.put(message.getName(), newQueue);
-        map.put(clientUserAgent, newTopicMap);
+    private void subscribeClientToMessageTopic(String clientUserAgent, String topicName) {
+
+        ConcurrentHashMap<String, BlockingQueue<Message>> oldConsumerMap = map.get(clientUserAgent);
+
+        // если ключа с таким клиентом нет (новый клиент)
+        if (oldConsumerMap == null) {
+            ConcurrentHashMap<String, BlockingQueue<Message>> newTopicMap = new ConcurrentHashMap<>();
+            newTopicMap.put(topicName, new LinkedBlockingQueue<>(10));
+            map.put(clientUserAgent, newTopicMap);
+        } else {
+            oldConsumerMap.put(topicName, new LinkedBlockingQueue<>(10));
+        }
     }
 
     // рассылка сообщения всем подписчикам топика

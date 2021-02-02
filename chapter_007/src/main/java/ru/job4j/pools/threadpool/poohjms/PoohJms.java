@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-import java.util.List;
 import java.util.concurrent.*;
 
 public class PoohJms {
@@ -45,14 +44,13 @@ public class PoohJms {
             String clientUserAgent = requestHeaders.get("userKey").get(0);
             System.out.println(clientUserAgent);
 
-
             Message responseMessage = null;
             if ("GET".equals(httpExchange.getRequestMethod())) {
                 String requestUri = httpExchange.getRequestURI().toString();
                 // проверка что get запрос в режиме Topic
                 if (requestUri.contains("/topic/")) {
                     String topicName = requestUri.split("/")[2];
-                    responseMessage = topicPooh.take(topicName);
+                    responseMessage = pubSubTopic.take(clientUserAgent, topicName);
                 }
                 // проверка что get запрос в режиме Queue
                 if (requestUri.contains("/queue/")) {
@@ -71,7 +69,7 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    responseMessage = pubSubTopic.add(clientUserAgent, message);
+                    responseMessage = pubSubTopic.add(message);
                 }
                 if (MsgHelper.isQueueMessage(jsonNode)) {
                     String type = jsonNode.get("queue").asText();
