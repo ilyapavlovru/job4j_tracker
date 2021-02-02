@@ -16,34 +16,54 @@ public class PubSubTopic {
     public Message add(String clientUserAgent, Message message) {
 
         // идентифицируем клиента: новый или старый
-        ConcurrentHashMap<String, BlockingQueue<Message>> topicMap = map.get(clientUserAgent);
+        ConcurrentHashMap<String, BlockingQueue<Message>> oldClientMap = map.get(clientUserAgent);
 
         // если ключа с таким клиентом нет (новый клиент)
-        if (topicMap == null) {
-            // то добавляем ключ клиента, топик и первое сообщение в топике
-            ConcurrentHashMap<String, BlockingQueue<Message>> newTopicMap = new ConcurrentHashMap<>();
-            BlockingQueue<Message> newQueue = new LinkedBlockingQueue<>(10);
-            // добавляем первое сообщение в эту новую очередь
-            //newQueue.add(message);
-            newTopicMap.put(message.getName(), newQueue);
-            map.put(clientUserAgent, newTopicMap);
+        if (oldClientMap == null) {
+
+            // добавляем клиенту новый топик и новую пустую очередь
+            subscribeClientToMessageTopic(clientUserAgent, message);
 
             // также, всем клиентам, у которых есть этот топик, в очередь добавляется новое сообщение
-            // пробегаем по всем клиентам
-            for (Map.Entry<String, ConcurrentHashMap<String, BlockingQueue<Message>>> entry : map.entrySet()) {
-                String client = entry.getKey();
-                ConcurrentHashMap<String, BlockingQueue<Message>> clientTopicMap = entry.getValue();
-                // проверяем, есть ли у текущего клиента топик
-                BlockingQueue<Message> clientTopicQueue = clientTopicMap.get(message.getName());
-                if (clientTopicQueue != null) {
-                    clientTopicQueue.add(message);
-                }
+            addMessageToAllTopicSubscribers(message);
+
+            // старый клиент
+        } else {
+            // если топик сообщения уже есть, то сообщение добавляется в очередь данного топика
+            BlockingQueue<Message> clientTopicQueue = oldClientMap.get(message.getName());
+            if (clientTopicQueue != null) {
+                clientTopicQueue.add(message);
+            } else {
+                // добавляем клиенту новый топик и новую пустую очередь
+                subscribeClientToMessageTopic(clientUserAgent, message);
             }
 
-        } else {
-
+            // также, всем клиентам, у которых есть этот топик, в очередь добавляется новое сообщение
+            addMessageToAllTopicSubscribers(message);
         }
 
         return message;
+    }
+
+    // подписка клиента на топик
+    private void subscribeClientToMessageTopic(String clientUserAgent, Message message) {
+        ConcurrentHashMap<String, BlockingQueue<Message>> newTopicMap = new ConcurrentHashMap<>();
+        BlockingQueue<Message> newQueue = new LinkedBlockingQueue<>(10);
+        newTopicMap.put(message.getName(), newQueue);
+        map.put(clientUserAgent, newTopicMap);
+    }
+
+    // рассылка сообщения всем подписчикам топика
+    private void addMessageToAllTopicSubscribers(Message message) {
+        // пробегаем по всем клиентам
+        for (Map.Entry<String, ConcurrentHashMap<String, BlockingQueue<Message>>> entry : map.entrySet()) {
+            String client = entry.getKey();
+            ConcurrentHashMap<String, BlockingQueue<Message>> clientTopicMap = entry.getValue();
+            // проверяем, есть ли у текущего клиента топик
+            BlockingQueue<Message> clientTopicQueue = clientTopicMap.get(message.getName());
+            if (clientTopicQueue != null) {
+                clientTopicQueue.add(message);
+            }
+        }
     }
 }
