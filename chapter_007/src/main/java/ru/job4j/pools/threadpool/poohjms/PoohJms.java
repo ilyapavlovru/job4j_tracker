@@ -17,18 +17,17 @@ import java.util.concurrent.*;
 public class PoohJms {
 
     private final ThreadPoolExecutor threadPoolExecutor;
-    private BlockingQueue<Message> queue;
+    private QueuePooh queuePooh;
     private TopicPooh topicPooh;
-    private PubSubTopic pubSubTopic;
 
     public PoohJms(String mode) throws IOException, InterruptedException {
         HttpServer server = HttpServer.create(new InetSocketAddress("192.168.90.139", 8001), 0);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.createContext("/" + mode, new PoohJms.PoohJmsHttpHandler());
         if (mode.equals("queue")) {
-            topicPooh = new TopicPooh();
+            queuePooh = new QueuePooh();
         } else if (mode.equals("topic")) {
-            pubSubTopic = new PubSubTopic();
+            topicPooh = new TopicPooh();
         }
         server.setExecutor(this.threadPoolExecutor);
         server.start();
@@ -47,14 +46,14 @@ public class PoohJms {
             Message responseMessage = null;
             if ("GET".equals(httpExchange.getRequestMethod())) {
                 String requestUri = httpExchange.getRequestURI().toString();
+                String topicName = requestUri.split("/")[2];
                 // проверка что get запрос в режиме Topic
                 if (requestUri.contains("/topic/")) {
-                    String topicName = requestUri.split("/")[2];
-                    responseMessage = pubSubTopic.take(clientUserAgent, topicName);
+                    responseMessage = topicPooh.take(clientUserAgent, topicName);
                 }
                 // проверка что get запрос в режиме Queue
                 if (requestUri.contains("/queue/")) {
-                    responseMessage = queue.poll();
+                    responseMessage = queuePooh.take(topicName);
                 }
                 // получить результирующий json и напечатать его в ответе на странице
                 String messageJsonString = messageToJsonString(responseMessage);
@@ -69,19 +68,13 @@ public class PoohJms {
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
 
-                    responseMessage = pubSubTopic.add(message);
+                    responseMessage = topicPooh.add(message);
                 }
                 if (MsgHelper.isQueueMessage(jsonNode)) {
                     String type = jsonNode.get("queue").asText();
                     String text = jsonNode.get("text").asText();
                     Message message = new Message(type, text);
-                    try {
-                        queue.put(message);
-                        responseMessage = message;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        responseMessage = null;
-                    }
+                    responseMessage = queuePooh.add(message);
                 }
                 String messageJsonString = messageToJsonString(responseMessage);
                 handleResponse(httpExchange, messageJsonString);
