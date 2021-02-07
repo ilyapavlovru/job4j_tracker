@@ -19,24 +19,18 @@ public class TopicPooh {
         // идентифицируем консумера: новый или старый
         ConcurrentHashMap<String, BlockingQueue<Message>> oldConsumerMap = map.get(clientUserAgent);
 
-        // если ключа с таким консумером нет (новый консумер)
-        if (oldConsumerMap == null) {
-
-            // подписка консумера на топик
-            subscribeConsumerToMessageTopic(clientUserAgent, topicName);
-
-            // старый клиент
-        } else {
+        // старый консумер
+        if (oldConsumerMap != null) {
 
             // если у консумера такой топик уже есть, то читаем сообщение из очереди и удаляем сообщение
             BlockingQueue<Message> consumerTopicQueue = oldConsumerMap.get(topicName);
             if (consumerTopicQueue != null) {
                 return consumerTopicQueue.poll();
-            } else {
-                // подписка консумера на топик
-                subscribeConsumerToMessageTopic(clientUserAgent, topicName);
             }
         }
+
+        // либо новый консумер, либо старый консумер, но без такого топика
+        subscribeConsumerToMessageTopic(clientUserAgent, topicName);
         return null;
     }
 
