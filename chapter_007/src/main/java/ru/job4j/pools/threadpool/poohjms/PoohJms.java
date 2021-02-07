@@ -47,15 +47,12 @@ public class PoohJms {
             if ("GET".equals(httpExchange.getRequestMethod())) {
                 String requestUri = httpExchange.getRequestURI().toString();
                 String topicName = requestUri.split("/")[2];
-                // проверка что get запрос в режиме Topic
                 if (requestUri.contains("/topic/")) {
                     responseMessage = topicPooh.take(clientUserAgent, topicName);
                 }
-                // проверка что get запрос в режиме Queue
                 if (requestUri.contains("/queue/")) {
                     responseMessage = queuePooh.take(topicName);
                 }
-                // получить результирующий json и напечатать его в ответе на странице
                 String messageJsonString = messageToJsonString(responseMessage);
                 handleResponse(httpExchange, messageJsonString);
 
