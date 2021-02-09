@@ -11,34 +11,13 @@ public class QueuePooh {
     }
 
     public Message add(Message message) {
-        map.computeIfPresent(message.getName(), (key, val) -> {
-            BlockingQueue<Message> queue = map.get(message.getName());
-            try {
-                queue.put(message);
-                return queue;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
-        map.computeIfAbsent(message.getName(), key -> {
-            BlockingQueue<Message> queue = new LinkedBlockingQueue<>(10);
-            try {
-                queue.put(message);
-                return queue;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
+        map.putIfAbsent(message.getName(), new LinkedBlockingQueue<>(10));
+        BlockingQueue<Message> topicQueue = map.get(message.getName());
+        topicQueue.add(message);
         return message;
     }
 
     public Message take(String topicName) {
-        BlockingQueue<Message> queue = map.get(topicName);
-        if (queue != null) {
-            return queue.poll();
-        }
-        return null;
+        return map.getOrDefault(topicName, null).poll();
     }
 }
