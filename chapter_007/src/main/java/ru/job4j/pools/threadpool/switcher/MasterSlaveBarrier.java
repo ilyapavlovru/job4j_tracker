@@ -8,8 +8,7 @@ public class MasterSlaveBarrier {
         while (flag != 0) {
             try {
                 wait();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -22,8 +21,7 @@ public class MasterSlaveBarrier {
         while (flag != 1) {
             try {
                 wait();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

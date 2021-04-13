@@ -27,9 +27,9 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "Profile{" +
-                "surname='" + surname + '\'' +
-                ", address=" + address +
-                '}';
+        return "Profile{"
+                + "surname='" + surname + '\''
+                + ", address=" + address
+                + '}';
     }
 }

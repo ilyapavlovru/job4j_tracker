@@ -11,9 +11,9 @@ public class Base {
 
     @Override
     public String toString() {
-        return "Base{" +
-                "id=" + id +
-                ", version=" + version +
-                '}';
+        return "Base{"
+                + "id=" + id
+                + ", version=" + version
+                + '}';
     }
 }

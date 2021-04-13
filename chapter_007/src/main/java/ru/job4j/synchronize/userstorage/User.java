@@ -29,11 +29,15 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
-        return id == user.id &&
-                amount == user.amount;
+        return id == user.id
+                && amount == user.amount;
     }
 
     @Override
@@ -41,12 +45,11 @@ public class User {
         return Objects.hash(id, amount);
     }
 
-
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", amount=" + amount +
-                '}';
+        return "User{"
+                + "id=" + id
+                + ", amount=" + amount
+                + '}';
     }
 }

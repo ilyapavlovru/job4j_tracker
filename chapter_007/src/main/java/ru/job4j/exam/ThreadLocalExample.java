@@ -17,7 +17,7 @@ public class ThreadLocalExample {
                 System.out.println(name + " end threadLocal: "
                         + threadLocal.get());
             }
-        };
+        }
 
         threadLocal.set("From main thread");
 

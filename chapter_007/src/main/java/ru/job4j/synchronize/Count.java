@@ -10,13 +10,13 @@ public class Count {
     private int value;
 
     public void increment() {
-        synchronized(this) {
+        synchronized (this) {
             value++;
         }
     }
 
     public int get() {
-        synchronized(this) {
+        synchronized (this) {
             return value;
         }
     }

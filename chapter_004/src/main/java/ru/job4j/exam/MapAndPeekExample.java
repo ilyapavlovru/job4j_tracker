@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class MapAndPeekExample {
 
-    public static void method1 () {
+    public static void method1() {
         List<Integer> list = new ArrayList<>();
 
         List<Integer> result = Stream.of(1, 2, 3, 4)
@@ -19,7 +19,7 @@ public class MapAndPeekExample {
         System.out.println(result);
     }
 
-    public static void method2 () {
+    public static void method2() {
         List<Integer> list = new ArrayList<>();
 
         List<Integer> result = Stream.of(1, 2, 3, 4)
@@ -32,7 +32,7 @@ public class MapAndPeekExample {
         System.out.println(result);
     }
 
-    public static void method3 () {
+    public static void method3() {
         List<Integer> list = new ArrayList<>();
 
         long howMany = Stream.of(1, 2, 3, 4)

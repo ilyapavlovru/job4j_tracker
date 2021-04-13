@@ -24,7 +24,9 @@ public class HttpServerCustom {
                      PrintWriter output = new PrintWriter(socket.getOutputStream())) {
 
                     // ждем первой строки запроса
-                    while (!input.ready()) ;
+                    while (!input.ready()) {
+                        continue;
+                    }
 
                     // считываем и печатаем все что было отправлено клиентом
                     System.out.println();

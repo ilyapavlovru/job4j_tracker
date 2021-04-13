@@ -35,18 +35,20 @@ public class SimpleServerTest {
                 os = t.getResponseBody();
                 os.write(response.getBytes());
 
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 e = ex;
                 throw ex;
             } finally {
                 try {
-                    if (os != null)
+                    if (os != null) {
                         os.close();
-                } catch(IOException ex) {
-                    if(e != null)
+                    }
+                } catch (IOException ex) {
+                    if (e != null) {
                         throw ex;
-                    else
+                    } else {
                         throw e;
+                    }
                 }
             }
         }

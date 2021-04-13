@@ -10,7 +10,7 @@ public class ForkJoinAdd extends RecursiveTask<Long> {
     private final long[] numbers;
     private final int start;
     private final int end;
-    private static final long threshold = 25;
+    private static final long THRESHOLD = 25;
 
     public ForkJoinAdd(long[] numbers, int start, int end) {
         System.out.println(Thread.currentThread().getName() + " Внутри конструктора, start: " + start + " end: " + end);
@@ -24,8 +24,8 @@ public class ForkJoinAdd extends RecursiveTask<Long> {
 
         System.out.println(Thread.currentThread().getName() + " Текущие значения start: " + start + " end: " + end);
         int length = end - start;
-        System.out.println(Thread.currentThread().getName() + " Длина length: " + length + " threshold = " + threshold);
-        if (length <= threshold) {
+        System.out.println(Thread.currentThread().getName() + " Длина length: " + length + " threshold = " + THRESHOLD);
+        if (length <= THRESHOLD) {
             System.out.println(Thread.currentThread().getName() + " Условие length <= threshold ВЫПОЛНЕНО, вызываем метод add");
             return add();
         }

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class InBuiltHttpServer {
     public static void main(String[] args) throws InterruptedException, IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
-        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
+        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.createContext("/test", new  MyHttpHandler());
         server.setExecutor(threadPoolExecutor);
         server.start();
@@ -37,14 +37,14 @@ public class InBuiltHttpServer {
             System.out.println("Внутри handle");
             String requestParamValue = null;
 
-            if("GET".equals(httpExchange.getRequestMethod())) {
+            if ("GET".equals(httpExchange.getRequestMethod())) {
                 System.out.println("Внутри GET обработчика");
                 requestParamValue = handleGetRequest(httpExchange);
                 System.out.println("requestParamValue = " + requestParamValue);
 
                 // получатель читает сообщение и удаляет его из очереди
 
-            } else if("POST".equals(httpExchange.getRequestMethod())) {
+            } else if ("POST".equals(httpExchange.getRequestMethod())) {
 
                 System.out.println("Внутри POST обработчика");
 
@@ -90,7 +90,7 @@ public class InBuiltHttpServer {
                     .append("");
 
             // encode HTML content
-            String htmlResponse =htmlBuilder.toString();
+            String htmlResponse = htmlBuilder.toString();
 
             // this line is a must
             httpExchange.sendResponseHeaders(200, htmlResponse.length());

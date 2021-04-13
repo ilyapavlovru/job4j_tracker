@@ -20,9 +20,9 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "type='" + name + '\'' +
-                ", text='" + text + '\'' +
-                '}';
+        return "Message{"
+                + "type='" + name + '\''
+                + ", text='" + text + '\''
+                + '}';
     }
 }

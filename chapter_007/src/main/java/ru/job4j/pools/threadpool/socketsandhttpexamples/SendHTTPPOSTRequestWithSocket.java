@@ -29,8 +29,8 @@ public class SendHTTPPOSTRequestWithSocket {
             // Send headers
             BufferedWriter wr =
                     new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
-            wr.write("POST "+path+" HTTP/1.0rn");
-            wr.write("Content-Length: "+params.length()+"rn");
+            wr.write("POST " + path + " HTTP/1.0rn");
+            wr.write("Content-Length: " + params.length() + "rn");
             wr.write("Content-Type: application/x-www-form-urlencodedrn");
             wr.write("rn");
 
@@ -49,11 +49,8 @@ public class SendHTTPPOSTRequestWithSocket {
             wr.close();
             rd.close();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

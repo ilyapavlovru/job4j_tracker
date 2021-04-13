@@ -2,16 +2,16 @@ package ru.job4j.pools.threadpool.threadsafesingleton.ver3;
 
 public class TrackerSingle {
 
-    private static TrackerSingle INSTANCE;
+    private static TrackerSingle instance;
 
     private TrackerSingle() {
     }
 
     public static synchronized TrackerSingle getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new TrackerSingle();
+        if (instance == null) {
+            instance = new TrackerSingle();
         }
-        return INSTANCE;
+        return instance;
     }
 
 //    public Item add(Item model) {

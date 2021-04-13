@@ -7,7 +7,7 @@ public class ForkJoinFindIndex<T> extends RecursiveTask<Integer> {
     private final T[] array;
     private final int start;
     private final int end;
-    private static final long threshold = 10_000;
+    private static final long THRESHOLD = 10_000;
     private final int searchIndex;
 
     public ForkJoinFindIndex(T[] array, int searchIndex, int start, int end) {
@@ -25,7 +25,7 @@ public class ForkJoinFindIndex<T> extends RecursiveTask<Integer> {
         }
 
         int length = end - start;
-        if (length <= threshold) {
+        if (length <= THRESHOLD) {
             return find(searchIndex);
         }
 

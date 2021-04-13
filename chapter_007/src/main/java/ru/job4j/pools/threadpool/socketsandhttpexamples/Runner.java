@@ -19,7 +19,7 @@ public class Runner {
         postRequest();
     }
 
-    public static void postRequest() throws Exception{
+    public static void postRequest() throws Exception {
         final URL url = new URL("http://localhost:8080");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -44,7 +44,7 @@ public class Runner {
         System.out.println(content);
     }
 
-    public static void getRequest() throws Exception{
+    public static void getRequest() throws Exception {
         final URL url = new URL("http://localhost:8080");
         final HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -58,7 +58,7 @@ public class Runner {
         System.out.println(content);
     }
 
-    public static String readInputStream(final HttpURLConnection con){
+    public static String readInputStream(final HttpURLConnection con) {
         try (final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
             String inputLine;
             final StringBuilder content = new StringBuilder();

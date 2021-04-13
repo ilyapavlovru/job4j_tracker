@@ -63,7 +63,7 @@ public class SimpleBlockingQueue<T> {
             try {
                 System.out.println(Thread.currentThread().getName() + ": Потребитель ожидает..." + "Элементов в очереди: " + queue.size());
                 wait();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

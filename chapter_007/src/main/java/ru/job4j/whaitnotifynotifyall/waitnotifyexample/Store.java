@@ -11,7 +11,7 @@ public class Store {
             try {
                 System.out.println(Thread.currentThread().getName() + ": Покупатель ожидает..." + "Продуктов на складе: " + product);
                 wait();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
             }
         }
         product--;

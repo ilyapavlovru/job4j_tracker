@@ -35,7 +35,7 @@ public class FileDownloadProgress implements Runnable {
                 double curSpeed =  (double) bytesRead / timeBytesRead;
                 System.out.println("current speed (bytes per second) = " + curSpeed);
                 double newTimeNeed = timeBytesRead * curSpeed / userSpeed;
-                int delay = (int)((newTimeNeed - timeBytesRead) * 1000);
+                int delay = (int) ((newTimeNeed - timeBytesRead) * 1000);
                 delay = Math.max(delay, 0);
                 System.out.println("current delay (ms) = " + delay);
                 lastTime = System.nanoTime();

@@ -20,14 +20,14 @@ public class MyCallable implements Callable<String> {
         List<Future<String>> list = new ArrayList<Future<String>>();
         Callable<String> callable = new MyCallable();
 
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             Future<String> future = executor.submit(callable);
             list.add(future);
         }
 
-        for(Future<String> fut : list) {
+        for (Future<String> fut : list) {
             try {
-                System.out.println(new Date()+ "::" + fut.get());
+                System.out.println(new Date() + "::" + fut.get());
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

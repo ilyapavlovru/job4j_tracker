@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 public class SocketServerExample {
     public static void main(String[] args) throws IOException {
-        try(ServerSocket serverSocket = new ServerSocket(8080);
-            Socket socket = serverSocket.accept();
-            Scanner scanner = new Scanner(socket.getInputStream())) {
+        try (ServerSocket serverSocket = new ServerSocket(8080);
+             Socket socket = serverSocket.accept();
+             Scanner scanner = new Scanner(socket.getInputStream())) {
 
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             while (scanner.hasNextLine()) {

@@ -7,12 +7,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * http://java-online.ru/concurrent-atomic.xhtml
  */
 public class SequenceGenerator {
-    private static BigInteger MULTIPLIER;
+    private static BigInteger multiplier;
     private AtomicReference<BigInteger> element;
 
     public SequenceGenerator() {
-        if (MULTIPLIER == null) {
-            MULTIPLIER = BigInteger.valueOf(2);
+        if (multiplier == null) {
+            multiplier = BigInteger.valueOf(2);
         }
         element = new AtomicReference<BigInteger>(BigInteger.ONE);
     }
@@ -26,7 +26,7 @@ public class SequenceGenerator {
         BigInteger next;  // следующее значение
         do {
             value = element.get();
-            next = value.multiply(MULTIPLIER);
+            next = value.multiply(multiplier);
         } while (!element.compareAndSet(value, next));
         return value;
     }

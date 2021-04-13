@@ -28,7 +28,7 @@ public class Sequence implements Runnable {
         try {
             for (int i = 0; i < count; i++) {
                 sequence.add(sg.next());
-                Thread.sleep((long)(Math.random() * 2 + 1) * 30);
+                Thread.sleep((long) (Math.random() * 2 + 1) * 30);
             }
         } catch (InterruptedException e) {
             System.out.println("Поток " + id + " прерван");
@@ -38,15 +38,18 @@ public class Sequence implements Runnable {
     }
 
     public void printSequence() {
-        if (printed)
+        if (printed) {
             return;
+        }
         String tmp = "[";
         for (int i = 0; i < sequence.size(); i++) {
-            if (i > 0)
+            if (i > 0) {
                 tmp += ", ";
+            }
             String nb = String.valueOf(sequence.get(i));
-            while (nb.length() < 9)
+            while (nb.length() < 9) {
                 nb = " " + nb;
+            }
             tmp += nb;
         }
         tmp += "]";

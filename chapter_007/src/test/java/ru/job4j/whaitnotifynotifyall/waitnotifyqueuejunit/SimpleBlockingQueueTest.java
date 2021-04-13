@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class SimpleBlockingQueueTest {
     @Test
     public void whenFetchAllThenGetIt() throws InterruptedException {
-        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<Integer>();
         final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
         // потребитель пытается получтить элементы пока значение флага общего ресурса равно true или поток не прерван
         final Thread consumer = new Thread(
@@ -19,7 +19,10 @@ public class SimpleBlockingQueueTest {
                     while (queue.isFlag() || !Thread.currentThread().isInterrupted()) {
                         try {
                             System.out.println(Thread.currentThread().getName() + ": Consumer пытается извлечь элемент..");
-                            buffer.add(queue.poll());
+                            Integer val = queue.poll();
+                            if (val != null) {
+                                buffer.add(val);
+                            }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                             Thread.currentThread().interrupt();

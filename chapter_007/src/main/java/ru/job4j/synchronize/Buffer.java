@@ -4,7 +4,7 @@ public class Buffer {
     private StringBuilder buffer = new StringBuilder();
 
     public void add(int value) {
-        synchronized(this) {
+        synchronized (this) {
             System.out.println(value);
             buffer.append(value);
         }
@@ -12,7 +12,7 @@ public class Buffer {
 
     @Override
     public String toString() {
-        synchronized(this) {
+        synchronized (this) {
             return buffer.toString();
         }
     }

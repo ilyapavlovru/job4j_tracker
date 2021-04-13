@@ -3,7 +3,7 @@ package ru.job4j.whaitnotifynotifyall.waitnotify;
 /**
  * Поток который добавляет увеличивает значение count общего ресурса
  */
-class ThreadFirst implements Runnable{
+class ThreadFirst implements Runnable {
 
     CountBarrier countBarrier;
 
@@ -12,7 +12,7 @@ class ThreadFirst implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
         for (int i = 1; i < 6; i++) {
             System.out.println("Inside run of Producer");
             countBarrier.count();
