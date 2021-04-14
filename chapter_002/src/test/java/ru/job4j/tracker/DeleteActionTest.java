@@ -13,12 +13,12 @@ public class DeleteActionTest {
     public void whenIdIsPresentThenItemIsDeleted() {
         Output out = new StubOutput();
         Tracker tracker = new Tracker();
-        tracker.add(new Item("Item to delete"));
+        Item delItem = tracker.add(new Item("Item to delete"));
         DeleteAction del = new DeleteAction(out);
 
         Input input = mock(Input.class);
 
-        when(input.askStr("Enter id to delete item: ")).thenReturn(tracker.findAll().get(0).getId());
+        when(input.askStr("Enter id to delete item: ")).thenReturn(delItem.getId());
 
         del.execute(input, tracker);
         String ln = System.lineSeparator();

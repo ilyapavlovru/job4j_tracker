@@ -13,13 +13,13 @@ public class ReplaceActionTest {
     public void whenIdIsFoundThenItemIsReplaced() {
         Output out = new StubOutput();
         Tracker tracker = new Tracker();
-        tracker.add(new Item("Replaced item"));
+        Item replaceItem = tracker.add(new Item("Replaced item"));
         String replacedName = "New item name";
         ReplaceAction rep = new ReplaceAction(out);
 
         Input input = mock(Input.class);
 
-        when(input.askStr("Enter id to replace item: ")).thenReturn(tracker.findAll().get(0).getId());
+        when(input.askStr("Enter id to replace item: ")).thenReturn(replaceItem.getId());
         when(input.askStr("Enter new name: ")).thenReturn(replacedName);
 
         rep.execute(input, tracker);

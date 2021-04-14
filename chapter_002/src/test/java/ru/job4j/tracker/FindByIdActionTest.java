@@ -13,17 +13,17 @@ public class FindByIdActionTest {
     public void whenIdIsPresentThenItemIsFound() {
         Output out = new StubOutput();
         Tracker tracker = new Tracker();
-        tracker.add(new Item("Found item"));
+        Item findItem = tracker.add(new Item("Found item"));
         FindByIdAction find = new FindByIdAction(out);
 
         Input input = mock(Input.class);
 
-        when(input.askStr("Enter id to find items: ")).thenReturn(tracker.findAll().get(0).getId());
+        when(input.askStr("Enter id to find items: ")).thenReturn(findItem.getId());
 
         find.execute(input, tracker);
 
         String ln = System.lineSeparator();
-        assertThat(out.toString(), CoreMatchers.is("id: " + tracker.findAll().get(0).getId() + "; name: " + tracker.findAll().get(0).getName() + ln));
+        assertThat(out.toString(), CoreMatchers.is("id: " + findItem.getId() + "; name: " + findItem.getName() + ln));
     }
 
     @Test

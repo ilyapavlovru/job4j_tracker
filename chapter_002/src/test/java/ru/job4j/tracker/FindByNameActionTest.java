@@ -32,17 +32,17 @@ public class FindByNameActionTest {
     public void whenIdIsPresentThenItemIsFound() {
         Output out = new StubOutput();
         Tracker tracker = new Tracker();
-        tracker.add(new Item("Found item"));
+        Item findItem = tracker.add(new Item("Found item"));
         FindByNameAction find = new FindByNameAction(out);
 
         Input input = mock(Input.class);
 
-        when(input.askStr("Enter name to find items: ")).thenReturn(tracker.findAll().get(0).getName());
+        when(input.askStr("Enter name to find items: ")).thenReturn(findItem.getName());
 
         find.execute(input, tracker);
 
         String ln = System.lineSeparator();
-        assertThat(out.toString(), CoreMatchers.is("id: " + tracker.findAll().get(0).getId() + "; name: " + tracker.findAll().get(0).getName() + ln));
+        assertThat(out.toString(), CoreMatchers.is("id: " + findItem.getId() + "; name: " + findItem.getName() + ln));
     }
 
     @Test
