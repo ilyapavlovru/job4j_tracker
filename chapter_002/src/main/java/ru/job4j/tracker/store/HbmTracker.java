@@ -18,66 +18,66 @@ public class HbmTracker implements Store, AutoCloseable {
 
     @Override
     public Item add(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.save(item);
-        session.getTransaction().commit();
-        session.close();
-        return item;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.save(item);
+            session.getTransaction().commit();
+            return item;
+        }
     }
 
     @Override
     public boolean replace(int id, Item item) {
         item.setId(id);
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.update(item);
-        session.getTransaction().commit();
-        session.close();
-        return true;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.update(item);
+            session.getTransaction().commit();
+            return true;
+        }
     }
 
     @Override
     public boolean delete(int id) {
         Item item = findById(id);
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.delete(item);
-        session.getTransaction().commit();
-        session.close();
-        return true;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            session.delete(item);
+            session.getTransaction().commit();
+            return true;
+        }
     }
 
     @Override
     public List<Item> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> result = session.createQuery("from ru.job4j.tracker.model.Item").list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            List<Item> result = session.createQuery("from ru.job4j.tracker.model.Item").list();
+            session.getTransaction().commit();
+            return result;
+        }
     }
 
     @Override
     public List<Item> findByName(String key) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("from ru.job4j.tracker.model.Item where name = :key");
-        query.setParameter("key", key);
-        List result = ((org.hibernate.query.Query) query).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("from ru.job4j.tracker.model.Item where name = :key");
+            query.setParameter("key", key);
+            List result = ((org.hibernate.query.Query) query).list();
+            session.getTransaction().commit();
+            return result;
+        }
     }
 
     @Override
     public Item findById(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Item result = session.get(Item.class, id);
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+            Item result = session.get(Item.class, id);
+            session.getTransaction().commit();
+            return result;
+        }
     }
 
     @Override
